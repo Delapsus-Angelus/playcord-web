@@ -5,91 +5,133 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
-<title>Christmas list</title>
+<meta name="theme-color" content="#141519">
+<title>A gift list on PlayCord</title>
+<meta name="description" content="Records they’d love, with where each is cheapest. Tap “I’m getting this” so nobody buys the same one twice.">
+<!-- What Messages, WhatsApp and the rest show for the link (Phil, 28 October 2026, 18:24: "look at the top of the
+     message to their friends and family, looks like coding text. Needs to be improved and logo embedded"). The same
+     for every list: the page itself fills in whose it is. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PlayCord">
+<meta property="og:title" content="A gift list on PlayCord">
+<meta property="og:description" content="Records they’d love, with where each is cheapest. Tap “I’m getting this” so nobody buys the same one twice.">
+<meta property="og:url" content="https://delapsus-angelus.github.io/playcord-web/wishlist.html">
+<meta property="og:image" content="https://delapsus-angelus.github.io/playcord-web/og-gift-list.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="PlayCord’s record, with the words: Records I’d love">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
   :root {
-    --bg: #F4F1EA; --card: #FFFFFF; --ink: #0C0F15; --muted: #545B66; --line: #DDD8CC;
-    --accent: #0D4ABB; --accent-ink: #FFFFFF; --taken: #8A4B12; --soft: #EFE9DC; --warn-bg: #FFF4E0; --warn-ink: #6B3A06;
+    --page: #F5F5F2; --panel: #FFFFFF; --ink: #141519; --muted: #5B606B; --line: #E4E3DF;
+    --gold: #F2B544; --gold-ink: #141519; --ok: #2F6B4F; --problem: #B42318; --field: #F5F5F2;
+    --night: #141519; --night-ink: #F3F0EA; --night-muted: #A8ADB7; --groove: #2A2B33;
+    --display: "Avenir Next Condensed", "AvenirNextCondensed-Heavy", "Bahnschrift", "Roboto Condensed", "sans-serif-condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+    --body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #141519; --card: #1E2026; --ink: #F3F0EA; --muted: #A8ADB7; --line: #2E313A;
-      --accent: #F2B544; --accent-ink: #141519; --taken: #E8B07A; --soft: #262932; --warn-bg: #2B2418; --warn-ink: #F2D29B;
+      --page: #141519; --panel: #1C1E24; --ink: #F3F0EA; --muted: #A8ADB7; --line: #2C2F37;
+      --ok: #7BC79B; --problem: #FF8A7A; --field: #141519;
     }
+    :root:not([data-theme="light"]) .hero { border-bottom: 1px solid #2C2F37; }
   }
+  :root[data-theme="dark"] .hero { border-bottom: 1px solid #2C2F37; }
   :root[data-theme="dark"] {
-    --bg: #141519; --card: #1E2026; --ink: #F3F0EA; --muted: #A8ADB7; --line: #2E313A;
-    --accent: #F2B544; --accent-ink: #141519; --taken: #E8B07A; --soft: #262932; --warn-bg: #2B2418; --warn-ink: #F2D29B;
+    --page: #141519; --panel: #1C1E24; --ink: #F3F0EA; --muted: #A8ADB7; --line: #2C2F37;
+    --ok: #7BC79B; --problem: #FF8A7A; --field: #141519;
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-  main { max-width: 680px; margin: 0 auto; padding: 28px 16px 0; }
-  h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 6px; letter-spacing: -0.01em; }
-  .lede { color: var(--muted); margin: 0 0 18px; }
-  .lookaway { background: var(--warn-bg); color: var(--warn-ink); border-radius: 12px; padding: 12px 14px; margin: 0 0 18px; font-size: 0.95rem; }
-  h2 { font-size: 1rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 28px 0 10px; font-weight: 600; }
-  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
-  li.item { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px; display: grid; grid-template-columns: 76px 1fr; gap: 14px; align-items: start; }
-  li.item.taken { opacity: 0.72; }
-  .cover { width: 76px; height: 76px; border-radius: 8px; background: var(--soft); object-fit: cover; display: block; }
-  .cover.none { display: grid; place-items: center; color: var(--muted); font-size: 0.75rem; text-align: center; padding: 6px; }
-  .title { font-weight: 700; font-size: 1.05rem; line-height: 1.3; margin: 0; overflow-wrap: anywhere; }
-  .artist { margin: 2px 0 0; color: var(--muted); overflow-wrap: anywhere; }
-  .price { margin: 8px 0 0; font-size: 0.95rem; }
-  .shoplink { display: inline-block; margin-top: 4px; color: var(--accent); font-weight: 600; text-decoration: none; }
-  .shoplink:hover, .shoplink:focus-visible { text-decoration: underline; }
-  .actions { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-  button { font: inherit; border-radius: 999px; padding: 10px 16px; min-height: 44px; cursor: pointer; border: 1px solid transparent; }
-  button.primary { background: var(--accent); color: var(--accent-ink); font-weight: 700; }
-  button.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+  body { margin: 0; background: var(--page); color: var(--ink); font: 16px/1.5 var(--body); }
+
+  /* The top: PlayCord's record in the corner, as if slid out of its sleeve, under the list's name. */
+  .hero { position: relative; overflow: hidden; background: var(--night); color: var(--night-ink); padding: 22px 16px 26px; padding-top: max(22px, env(safe-area-inset-top)); }
+  .hero-in { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; }
+  .brand { display: inline-flex; align-items: center; gap: 8px; font: 800 1.05rem/1 var(--display); font-stretch: condensed; letter-spacing: 0.02em; color: var(--night-ink); text-decoration: none; }
+  .brand svg { width: 26px; height: 26px; flex: none; }
+  h1 { margin: 44px 0 0; max-width: 11ch; font: 800 clamp(2.7rem, 12.5vw, 4.9rem)/0.94 var(--display); font-stretch: condensed; letter-spacing: -0.005em; overflow-wrap: anywhere; }
+  .when[hidden] { display: none; }
+  .when { margin: 14px 0 0; display: inline-block; background: var(--gold); color: var(--gold-ink); font: 800 1.05rem/1 var(--display); font-stretch: condensed; letter-spacing: 0.01em; padding: 9px 12px 8px; border-radius: 6px; }
+  /* The foot of the top: what the list is, beside the record, which always starts below the name and the day. */
+  .foot { position: relative; min-height: 158px; padding-top: 26px; }
+  .foot .lede { position: relative; z-index: 1; max-width: calc(100% - 158px); margin: 0; color: var(--night-muted); }
+  .disc { position: absolute; top: 6px; right: -112px; width: 254px; height: 254px; z-index: 0; pointer-events: none; transform: rotate(-38deg); }
+  .disc svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 0 40px rgba(242, 181, 68, 0.14)); }
+  @media (prefers-reduced-motion: no-preference) {
+    .disc { animation: slide-out 1.4s cubic-bezier(.2, .8, .2, 1) both; }
+    @keyframes slide-out { from { transform: translateX(80px) rotate(-100deg); opacity: 0; } to { transform: rotate(-38deg); opacity: 1; } }
+  }
+  @media (min-width: 560px) { h1 { margin-top: 56px; } .foot { min-height: 190px; } .foot .lede { max-width: 330px; } .disc { width: 320px; height: 320px; right: -40px; } }
+
+  main { max-width: 680px; margin: 0 auto; padding: 22px 16px 0; }
+  .lede { color: var(--muted); margin: 0 0 14px; }
+  .lookaway { display: flex; gap: 10px; align-items: flex-start; border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px; margin: 0 0 22px; font-size: 0.93rem; color: var(--muted); }
+  .lookaway svg { flex: none; width: 20px; height: 20px; margin-top: 1px; color: var(--ink); }
+  .how { margin: 0 0 6px; }
+  h2 { font: 800 1.7rem/1.05 var(--display); font-stretch: condensed; margin: 30px 0 12px; display: flex; align-items: baseline; gap: 10px; }
+  h2 .n { font: 600 0.95rem/1 var(--body); color: var(--muted); }
+
+  /* The records: one sleeve-white panel, each record a row, its cover like a sleeve in a crate. */
+  ul.crate { list-style: none; margin: 0; padding: 0 16px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; }
+  li.rec { display: grid; grid-template-columns: 92px 1fr; gap: 16px; padding: 18px 0; border-top: 1px solid var(--line); }
+  li.rec:first-child { border-top: 0; }
+  li.rec.taken .sleeve { filter: grayscale(0.6); opacity: 0.75; }
+  .sleeve { width: 92px; height: 92px; border-radius: 4px; display: block; object-fit: cover; background: var(--line); box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 6px 14px -6px rgba(20, 21, 25, 0.45); }
+  .sleeve.none { display: grid; place-items: center; background: var(--night); }
+  .sleeve.none svg { width: 56px; height: 56px; }
+  .title { margin: 0; font: 800 1.32rem/1.08 var(--display); font-stretch: condensed; overflow-wrap: anywhere; }
+  .by { margin: 4px 0 0; color: var(--muted); overflow-wrap: anywhere; }
+  .price { margin: 10px 0 0; font-size: 0.97rem; }
+  .price strong { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .shop { display: inline-block; margin-top: 6px; color: var(--ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--gold); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  .shop:hover { text-decoration-thickness: 3px; }
+  .act { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  button { font: inherit; border-radius: 999px; padding: 11px 18px; min-height: 46px; cursor: pointer; border: 1px solid transparent; }
+  button.get { background: var(--gold); color: var(--gold-ink); font: 800 1.08rem/1 var(--display); font-stretch: condensed; letter-spacing: 0.01em; padding: 13px 20px 12px; }
+  button.get:hover { filter: brightness(1.05); }
+  button.plain { background: transparent; color: var(--ink); border-color: var(--line); }
   button:disabled { opacity: 0.6; cursor: default; }
-  button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-  .status { margin: 10px 0 0; font-weight: 600; color: var(--taken); }
-  form.who { margin-top: 12px; display: grid; gap: 8px; }
-  form.who label { font-size: 0.9rem; color: var(--muted); }
-  input[type="text"] { font: inherit; width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); min-height: 44px; }
-  .problem { color: #C0392B; margin: 8px 0 0; font-size: 0.95rem; }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .problem { color: #FF8A7A; } }
-  :root[data-theme="dark"] .problem { color: #FF8A7A; }
-  .note { color: var(--muted); font-size: 0.9rem; margin: 24px 0 0; }
-  /* What PlayCord is, for people who've never heard of it (Phil, 28 October 2026, 02:45: "Shouldn't it be obvious
-     where the link to the app is, they might not have heard of us."). */
-  .newto { margin: -6px 0 18px; font-size: 0.95rem; color: var(--muted); }
-  .getapp { margin: 32px 0 0; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; text-align: center; }
-  .getapp h2 { margin: 0 0 6px; text-transform: none; letter-spacing: 0; font-size: 1.25rem; color: var(--ink); font-weight: 800; }
-  .getapp p { margin: 0 auto 14px; max-width: 46ch; color: var(--muted); }
-  .stores { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 14px; }
-  .store { border: 1px solid var(--line); border-radius: 10px; padding: 8px 14px; font-size: 0.85rem; color: var(--muted); }
-  .store strong { color: var(--ink); font-weight: 700; }
-  .empty { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; }
-  footer { margin-top: 32px; color: var(--muted); font-size: 0.85rem; text-align: center; }
-  /* PlayCord's record rising from the foot of the page, half of it showing (Phil, 28 October 2026, 02:32: "it needs our
-     logo underneath half visible but classy"). */
-  .brandmark { height: 132px; overflow: hidden; display: flex; justify-content: center; margin: 22px auto 0; pointer-events: none; }
-  .brandmark svg { width: 264px; height: 264px; flex: none; filter: drop-shadow(0 -8px 28px rgba(0, 0, 0, 0.16)); }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .brandmark svg { filter: drop-shadow(0 -8px 32px rgba(242, 181, 68, 0.12)); } }
-  :root[data-theme="dark"] .brandmark svg { filter: drop-shadow(0 -8px 32px rgba(242, 181, 68, 0.12)); }
-  @media (max-width: 380px) { li.item { grid-template-columns: 60px 1fr; } .cover { width: 60px; height: 60px; } h1 { font-size: 1.6rem; } }
+  button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  .status { margin: 12px 0 0; font-weight: 700; color: var(--ok); }
+  .sent { margin: 4px 0 0; color: var(--muted); font-size: 0.93rem; }
+  form.who { grid-column: 1 / -1; margin-top: -2px; display: grid; gap: 8px; }
+  li.rec > .problem { grid-column: 1 / -1; margin-top: -6px; }
+  form.who label { font-size: 0.92rem; color: var(--muted); }
+  input[type="text"], input[type="email"] { font: inherit; width: 100%; padding: 11px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--field); color: var(--ink); min-height: 46px; }
+  .help { margin: -2px 0 4px; font-size: 0.86rem; color: var(--muted); }
+  .tick { display: flex; gap: 10px; align-items: flex-start; font-size: 0.93rem; color: var(--ink) !important; cursor: pointer; }
+  .tick input { width: 22px; height: 22px; margin: 1px 0 0; flex: none; accent-color: var(--gold); }
+  .problem { color: var(--problem); margin: 8px 0 0; font-size: 0.95rem; }
+  .note { color: var(--muted); font-size: 0.9rem; margin: 22px 0 0; }
+  .empty { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+
+  /* What PlayCord is, for people who've never heard of it (Phil, 28 October 2026, 02:45). */
+  .getapp { margin: 36px 0 0; background: var(--night); color: var(--night-ink); border-radius: 14px; padding: 22px 20px; display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; overflow: hidden; }
+  .getapp h2 { margin: 0 0 6px; color: var(--night-ink); }
+  .getapp p { margin: 0; color: var(--night-muted); max-width: 44ch; }
+  .getapp .soon { margin-top: 12px; color: var(--gold); font-weight: 600; font-size: 0.92rem; }
+  .getapp svg { width: 84px; height: 84px; }
+  footer { margin: 26px 0 40px; color: var(--muted); font-size: 0.85rem; text-align: center; }
+  @media (max-width: 380px) { li.rec { grid-template-columns: 72px 1fr; gap: 12px; } .sleeve { width: 72px; height: 72px; } .getapp { grid-template-columns: 1fr; } .getapp svg { display: none; } }
 </style>
 </head>
 <body>
-<main>
-  <h1 id="heading">A Christmas list</h1>
-  <p class="lede" id="lede">Records from PlayCord, each with where it’s cheapest.</p>
-  <p class="newto">New to PlayCord? It turns the songs you love into a record collection.</p>
-  <div id="app" aria-live="polite"><p class="lede">Opening the list…</p></div>
-  <section class="getapp" aria-labelledby="getapp-h">
-    <h2 id="getapp-h">Get PlayCord</h2>
-    <p>Turn the songs you love into a record collection: PlayCord works out which albums hold them, plans what to buy within a budget, and finds where each is cheapest.</p>
-    <div class="stores" aria-label="Where to get it">
-      <span class="store"><strong>iPhone</strong> · coming soon</span>
-      <span class="store"><strong>Android</strong> · coming soon</span>
-    </div>
-  </section>
-  <footer>Made with PlayCord. Prices change, so check the shop’s page before you buy.</footer>
-  <div class="brandmark" aria-hidden="true">
-    <svg viewBox="0 0 100 100" role="img" aria-label="PlayCord" focusable="false">
+<header class="hero">
+  <div class="hero-in">
+    <span class="brand">
+      <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><circle cx="50" cy="50" r="50" fill="#F7F5F0"/><circle cx="50" cy="50" r="38" fill="#0B0B0D"/><circle cx="50" cy="50" r="15" fill="#F2B544"/><circle cx="50" cy="50" r="3.4" fill="#0B0B0D"/></svg>
+      PlayCord
+    </span>
+    <h1 id="heading">A gift list</h1>
+    <p class="when" id="when" hidden></p>
+    <div class="foot">
+      <p class="lede" id="lede">Records from PlayCord, each with where it’s cheapest.</p>
+      <div class="disc" aria-hidden="true">
+    <svg viewBox="0 0 100 100" focusable="false">
       <defs>
         <path id="pcover" d="M 11.820 50 A 38.180 38.180 0 0 1 88.180 50"/>
         <path id="pcunder" d="M 4.764 50 A 45.236 45.236 0 0 0 95.236 50"/>
@@ -107,25 +149,60 @@
       <circle cx="7.5" cy="50" r="1.5" fill="#0B0B0D"/>
       <circle cx="92.5" cy="50" r="1.5" fill="#0B0B0D"/>
     </svg>
+      </div>
+    </div>
   </div>
+</header>
+<main>
+  <div id="app" aria-live="polite"><p class="lede">Opening the list…</p></div>
+  <section class="getapp" aria-labelledby="getapp-h">
+    <div>
+      <h2 id="getapp-h">New to PlayCord?</h2>
+      <p>It turns the songs you love into a record collection: which albums hold them, what to buy within a budget, and where each is cheapest.</p>
+      <p class="soon">Coming soon for iPhone and Android.</p>
+    </div>
+    <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><circle cx="50" cy="50" r="50" fill="#F7F5F0"/><circle cx="50" cy="50" r="38" fill="#0B0B0D"/><circle cx="50" cy="50" r="32" fill="none" stroke="#2A2A30" stroke-width="1"/><circle cx="50" cy="50" r="26" fill="none" stroke="#2A2A30" stroke-width="1"/><circle cx="50" cy="50" r="15" fill="#F2B544"/><circle cx="50" cy="50" r="3.4" fill="#0B0B0D"/></svg>
+  </section>
+  <footer>Made with PlayCord. Prices change, so check the shop’s page before you buy.</footer>
 </main>
 <script>
 (function () {
   'use strict';
   var API = 'https://fyswlovbnndgbipmpquv.supabase.co/functions/v1/api';
-  var token = (location.hash || '').replace(/^#/, '');
+  // The link: the list's secret after the #, and, from a giver's own email, "&undo=" and their claim's secret.
+  var token = '', undoClaim = '';
+  function readHash() {
+    var parts = (location.hash || '').replace(/^#/, '').split('&');
+    token = parts[0] || '';
+    undoClaim = '';
+    parts.slice(1).forEach(function (p) { var m = /^undo=([A-Za-z0-9_-]{16,64})$/.exec(p); if (m) undoClaim = m[1]; });
+  }
+  readHash();
   var app = document.getElementById('app');
   var state = null;           // the list as last read
   var asking = null;          // the record whose "who" form is open
   var busy = false;
 
-  // Records this browser said it's getting, so only it is offered Undo (kept on this device only).
-  var MINE_KEY = 'playcord.christmas.mine.' + token;
-  function mineRead() { try { var v = JSON.parse(localStorage.getItem(MINE_KEY) || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; } }
-  function mineWrite(keys) { try { localStorage.setItem(MINE_KEY, JSON.stringify(keys)); } catch (e) { /* this device only, fine without */ } }
-  var NAME_KEY = 'playcord.christmas.name';
-  function nameRead() { try { return localStorage.getItem(NAME_KEY) || ''; } catch (e) { return ''; } }
-  function nameWrite(n) { try { localStorage.setItem(NAME_KEY, n); } catch (e) { /* fine */ } }
+  // The occasions a list can be for, as PlayCord's app names them (engine/src/wishlist.ts OCCASIONS).
+  var OCCASIONS = {
+    christmas: { name: 'Christmas Day', list: 'Christmas list' }, birthday: { name: 'Birthday', list: 'birthday list' },
+    anniversary: { name: 'Anniversary', list: 'anniversary list' }, valentines: { name: 'Valentine’s Day', list: 'Valentine’s list' },
+    'mothers-day': { name: 'Mother’s Day', list: 'Mother’s Day list' }, 'fathers-day': { name: 'Father’s Day', list: 'Father’s Day list' },
+    hanukkah: { name: 'Hanukkah', list: 'Hanukkah list' }, eid: { name: 'Eid', list: 'Eid list' }, diwali: { name: 'Diwali', list: 'Diwali list' },
+    wedding: { name: 'The wedding', list: 'wedding list' }, retirement: { name: 'Retirement', list: 'retirement list' }, any: { name: '', list: 'wish list' },
+  };
+  function occasionOf(id) { return OCCASIONS[id] || OCCASIONS.christmas; }
+
+  // On this device only, for this list: the claims this browser made (each record's claim secret, which Undo needs), and
+  // what became of each one's email. Nobody's name or email is remembered, so a shared iPad never hands one giver's
+  // details to the next.
+  function store(name) { return 'playcord.gift.' + name + '.' + token; }
+  function read(name, empty) { try { var v = JSON.parse(localStorage.getItem(store(name)) || 'null'); return v && typeof v === 'object' ? v : empty; } catch (e) { return empty; } }
+  function write(name, v) { try { localStorage.setItem(store(name), JSON.stringify(v)); } catch (e) { /* this device only, fine without */ } }
+  function claims() { return read('claims', {}); }
+  // Claims from before claim secrets: kept as they were, so their Undo still shows.
+  function oldMine() { try { var v = JSON.parse(localStorage.getItem('playcord.christmas.mine.' + token) || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; } }
+  function isMine(key) { return Object.prototype.hasOwnProperty.call(claims(), key) || oldMine().indexOf(key) >= 0; }
 
   function el(tag, attrs, kids) {
     var n = document.createElement(tag);
@@ -135,7 +212,7 @@
       else if (k === 'on') for (var ev in attrs.on) n.addEventListener(ev, attrs.on[ev]);
       else n.setAttribute(k, attrs[k] === true ? '' : attrs[k]);
     }
-    (kids || []).forEach(function (c) { if (c) n.appendChild(c); });
+    (kids || []).forEach(function (c) { if (c) n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
     return n;
   }
   function money(n, ccy) {
@@ -147,7 +224,14 @@
     if (isNaN(d.getTime())) return '';
     return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long' });
   }
-  function https(u) { return typeof u === 'string' && /^https:\/\/[^\s]+$/.test(u) ? u : null; }
+  function longDay(day) {
+    var d = new Date(day + 'T12:00:00Z');
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
+  }
+  function https(u) { return typeof u === 'string' && /^https:\/\/[^\s"'<>]+$/.test(u) ? u : null; }
+  function emailOk(s) { return s.length <= 254 && /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)*\.[A-Za-z]{2,}$/.test(s); }
+  var SLEEVE = '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><circle cx="50" cy="50" r="46" fill="#0B0B0D" stroke="#2A2A30" stroke-width="2"/><circle cx="50" cy="50" r="34" fill="none" stroke="#2A2A30" stroke-width="1.5"/><circle cx="50" cy="50" r="16" fill="#F2B544"/><circle cx="50" cy="50" r="3.5" fill="#0B0B0D"/></svg>';
 
   async function call(route, body) {
     var res = await fetch(API + '/' + route, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
@@ -163,19 +247,44 @@
 
   async function load() {
     if (!/^[A-Za-z0-9_-]{16,64}$/.test(token)) { show('This link isn’t complete. Ask for it again, and open the whole link.'); return; }
-    try { state = await call('wishlist-view', { token: token }); render(); }
-    catch (e) { show(e.message); }
+    try {
+      state = await call('wishlist-view', undoClaim ? { token: token, claim: undoClaim } : { token: token });
+      // From a giver's email: their claim is theirs here too, so its Undo shows.
+      if (undoClaim && state.yours) { var c = claims(); c[state.yours] = undoClaim; write('claims', c); }
+      render();
+      if (undoClaim && state.yours) { var row = document.getElementById('rec-' + encodeURIComponent(state.yours)); if (row) row.scrollIntoView({ block: 'center' }); }
+    } catch (e) { show(e.message); }
   }
 
-  async function take(key, by, undo) {
+  // What happened to their email, said the same way whatever the reason it didn't go, so the page says nothing about
+  // anyone else (the second review). From before: 'again', 'list' and 'address', read as 'yes' and 'no'.
+  var SENT_WORDS = {
+    yes: 'PlayCord emailed you where to buy it.',
+    maybe: 'PlayCord is sending you where to buy it. If it hasn’t come in a few minutes, look in your spam folder.',
+    later: 'The email didn’t go just now, but it’s yours, and PlayCord will still remind you a week before.',
+    no: 'PlayCord couldn’t email you this time, but it’s yours.',
+    again: 'PlayCord emailed you where to buy it.',
+    list: 'PlayCord couldn’t email you this time, but it’s yours.',
+    address: 'PlayCord couldn’t email you this time, but it’s yours.',
+  };
+
+  async function take(key, by, undo, email, news) {
     if (busy) return;
     busy = true; render();
     var problem = null;
     try {
-      state = await call('wishlist-take', { token: token, key: key, by: by || undefined, undo: !!undo });
-      var mine = mineRead().filter(function (k) { return k !== key; });
-      if (!undo) mine.push(key);
-      mineWrite(mine);
+      var c = claims();
+      var answer = await call('wishlist-take', undo
+        ? { token: token, key: key, undo: true, claim: c[key] || undefined }
+        : { token: token, key: key, by: by || undefined, email: email || undefined, news: !!news });
+      state = answer;
+      var sent = read('sent', {});
+      if (undo) { delete c[key]; delete sent[key]; }
+      else {
+        c[key] = answer.claim || '';
+        if (email && answer.emailed !== undefined) sent[key] = answer.emailed ? (answer.maybe ? 'maybe' : 'yes') : (answer.reminder ? 'later' : 'no');
+      }
+      write('claims', c); write('sent', sent);
       asking = null;
     } catch (e) {
       problem = { key: key, text: e.message };
@@ -188,71 +297,94 @@
   function itemView(it, takenBy, mine, problem) {
     var taken = takenBy !== undefined;
     var cover = https(it.cover)
-      ? el('img', { class: 'cover', src: it.cover, alt: '', loading: 'lazy', width: '76', height: '76' })
-      : el('div', { class: 'cover none', 'aria-hidden': 'true', text: 'No picture' });
-    var priceText = null;
+      ? el('img', { class: 'sleeve', src: it.cover, alt: '', loading: 'lazy', width: '92', height: '92' })
+      : el('div', { class: 'sleeve none', 'aria-hidden': 'true' });
+    if (!https(it.cover)) cover.innerHTML = SLEEVE;
+    var price = null;
     if (typeof it.price === 'number' && it.price > 0) {
-      priceText = it.guess
-        ? 'About ' + money(it.price, it.currency) + ' with delivery (PlayCord’s first guess)'
-        : money(it.price, it.currency) + ' with delivery' + (it.shop ? ' at ' + it.shop : '');
+      price = it.guess
+        ? el('p', { class: 'price' }, ['About ', el('strong', { text: money(it.price, it.currency) }), ' with delivery (PlayCord’s first guess)'])
+        : el('p', { class: 'price' }, [el('strong', { text: money(it.price, it.currency) }), ' with delivery' + (it.shop ? ' at ' + it.shop : '')]);
     }
     var url = https(it.url);
+    var row = null;             // the form saying who's getting it: across the whole row
     var body = [
-      el('p', { class: 'title', text: it.title }),
-      el('p', { class: 'artist', text: it.artist + (it.year ? ', ' + it.year : '') }),
-      priceText ? el('p', { class: 'price', text: priceText }) : null,
-      url ? el('a', { class: 'shoplink', href: url, target: '_blank', rel: 'noopener noreferrer', text: 'See it at ' + (it.shop || 'the shop') + ' ↗' }) : null,
+      el('h3', { class: 'title', text: it.title }),
+      el('p', { class: 'by', text: it.artist + (it.year ? ', ' + it.year : '') }),
+      price,
+      url ? el('a', { class: 'shop', href: url, target: '_blank', rel: 'noopener noreferrer', text: 'See it at ' + (it.shop || 'the shop') + ' ↗' }) : null,
     ];
     if (taken) {
       body.push(el('p', { class: 'status', text: mine ? 'You’re getting this.' : (takenBy ? takenBy + ' is getting this.' : 'Someone’s getting this.') }));
-      if (mine) body.push(el('div', { class: 'actions' }, [el('button', { class: 'ghost', type: 'button', disabled: busy, text: 'Undo: I’m not getting it after all', on: { click: function () { take(it.key, null, true); } } })]));
+      var sent = mine ? read('sent', {})[it.key] : null;
+      if (sent && SENT_WORDS[sent]) body.push(el('p', { class: 'sent', text: SENT_WORDS[sent] }));
+      if (mine) body.push(el('div', { class: 'act' }, [el('button', { class: 'plain', type: 'button', disabled: busy, text: 'Undo: I’m not getting it after all', on: { click: function () { take(it.key, null, true); } } })]));
     } else if (asking === it.key) {
-      var input = el('input', { type: 'text', id: 'who-' + it.key, maxlength: '40', autocomplete: 'name', placeholder: 'Your name, so the others know', value: nameRead() });
-      var form = el('form', { class: 'who', on: { submit: function (e) { e.preventDefault(); var n = input.value.trim(); if (n) nameWrite(n); take(it.key, n, false); } } }, [
-        el('label', { for: 'who-' + it.key, text: 'Your name (optional: only the others opening this link see it)' }),
-        input,
-        el('div', { class: 'actions' }, [
-          el('button', { class: 'primary', type: 'submit', disabled: busy, text: busy ? 'Saving…' : 'Yes, I’m getting this' }),
-          el('button', { class: 'ghost', type: 'button', disabled: busy, text: 'Cancel', on: { click: function () { asking = null; render(); } } }),
+      var who = el('input', { type: 'text', id: 'who-' + it.key, maxlength: '40', autocomplete: 'off', placeholder: 'So the others know' });
+      var parts = [el('label', { for: 'who-' + it.key, text: 'Your name (optional: only others opening this link see it)' }), who];
+      var mail = null, news = null;
+      if (state.emails) {
+        mail = el('input', { type: 'email', id: 'mail-' + it.key, maxlength: '254', autocomplete: 'email', inputmode: 'email', placeholder: 'For where to buy it' + (state.day ? ', and a reminder' : '') });
+        news = el('input', { type: 'checkbox', id: 'news-' + it.key });
+        parts.push(el('label', { for: 'mail-' + it.key, text: 'Your email (optional)' }), mail,
+          el('p', { class: 'help', text: state.day
+            ? 'PlayCord emails you where to buy it and a reminder a week before. It’s deleted the day after, and used for nothing else unless you tick below and confirm it.'
+            : 'PlayCord emails you where to buy it. It’s deleted after two months, and used for nothing else unless you tick below and confirm it.' }),
+          el('label', { class: 'tick', for: 'news-' + it.key }, [news, el('span', { text: state.newsBox || 'Also send me occasional emails about PlayCord. I’ll confirm it from my email.' })]));
+      }
+      var form = el('form', { class: 'who', novalidate: true, on: { submit: function (e) {
+        e.preventDefault();
+        var m = mail ? mail.value.trim() : '';
+        if (m && !emailOk(m)) { render({ key: it.key, text: 'That email address doesn’t look right. Check it, or leave it empty.' }); return; }
+        take(it.key, who.value.trim(), false, m, !!(news && news.checked && m));
+      } } }, parts.concat([
+        el('div', { class: 'act' }, [
+          el('button', { class: 'get', type: 'submit', disabled: busy, text: busy ? 'Saving…' : 'Yes, I’m getting this' }),
+          el('button', { class: 'plain', type: 'button', disabled: busy, text: 'Cancel', on: { click: function () { asking = null; render(); } } }),
         ]),
-      ]);
-      body.push(form);
-      setTimeout(function () { try { input.focus(); } catch (e) { /* fine */ } }, 0);
+      ]));
+      row = form;
+      setTimeout(function () { try { who.focus(); } catch (e) { /* fine */ } }, 0);
     } else {
-      body.push(el('div', { class: 'actions' }, [el('button', { class: 'primary', type: 'button', disabled: busy, text: 'I’m getting this', 'aria-label': 'I’m getting ' + it.title, on: { click: function () { asking = it.key; render(); } } })]));
+      body.push(el('div', { class: 'act' }, [el('button', { class: 'get', type: 'button', disabled: busy, text: 'I’m getting this', 'aria-label': 'I’m getting ' + it.title, on: { click: function () { asking = it.key; render(); } } })]));
     }
-    if (problem && problem.key === it.key) body.push(el('p', { class: 'problem', role: 'alert', text: problem.text }));
-    return el('li', { class: 'item' + (taken ? ' taken' : '') }, [cover, el('div', null, body)]);
+    var said = problem && problem.key === it.key ? el('p', { class: 'problem', role: 'alert', text: problem.text }) : null;
+    return el('li', { class: 'rec' + (taken ? ' taken' : ''), id: 'rec-' + encodeURIComponent(it.key) }, [cover, el('div', null, body), row, said]);
   }
 
   function render(problem) {
     if (!state) return;
     var who = state.name ? state.name : '';
-    document.title = who ? who + '’s Christmas list' : 'Christmas list';
-    document.getElementById('heading').textContent = who ? who + '’s Christmas list' : 'A Christmas list';
-    document.getElementById('lede').textContent = 'Records ' + (who || 'they')+ (who ? ' would' : '’d') + ' love, from PlayCord, each with where it’s cheapest' + (state.updatedAt ? ' (updated ' + dayWords(state.updatedAt) + ')' : '') + '.';
+    var o = occasionOf(state.occasion);
+    var heading = who ? who + '’s ' + o.list : (/^[aeiou]/i.test(o.list) ? 'An ' : 'A ') + o.list;
+    document.title = heading;
+    document.getElementById('heading').textContent = heading;
+    var when = document.getElementById('when');
+    if (state.day && o.name) { when.textContent = o.name + ', ' + longDay(state.day); when.hidden = false; } else when.hidden = true;
+    document.getElementById('lede').textContent = 'Records ' + (who || 'they') + (who ? ' would' : '’d') + ' love, each with where it’s cheapest' + (state.updatedAt ? ' (updated ' + dayWords(state.updatedAt) + ')' : '') + '.';
     var takenBy = {};
     (state.taken || []).forEach(function (t) { takenBy[t.key] = t.by || ''; });
-    var mine = mineRead();
     var items = state.items || [];
     var open = items.filter(function (i) { return takenBy[i.key] === undefined; });
     var gone = items.filter(function (i) { return takenBy[i.key] !== undefined; });
     app.textContent = '';
-    app.appendChild(el('p', { class: 'lookaway', text: (who ? 'Is this your list, ' + who + '? ' : 'Is this your list? ') + 'Look away now: it shows what people are getting you.' }));
+    var eye = el('span');
+    eye.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6Z"/><circle cx="12" cy="12" r="2.6"/><path d="M4 4l16 16"/></svg>';
+    app.appendChild(el('p', { class: 'lookaway' }, [eye.firstChild, el('span', { text: (who ? who + '? ' : 'Is this your list? ') + 'Look away now: this page shows what people are getting you.' })]));
     if (!items.length) { app.appendChild(el('div', { class: 'empty' }, [el('p', { style: 'margin:0', text: 'Nothing on the list just now. Check back soon.' })])); return; }
-    app.appendChild(el('p', { class: 'lede', text: 'Getting one? Tap “I’m getting this” so nobody else buys it too.' }));
+    app.appendChild(el('p', { class: 'how', text: 'Getting one? Tap “I’m getting this” so nobody else buys it too.' }));
     if (open.length) {
-      app.appendChild(el('h2', { text: 'Still wanted' }));
-      app.appendChild(el('ul', null, open.map(function (i) { return itemView(i, undefined, false, problem); })));
+      app.appendChild(el('h2', null, ['Still wanted', el('span', { class: 'n', text: String(open.length) })]));
+      app.appendChild(el('ul', { class: 'crate' }, open.map(function (i) { return itemView(i, undefined, false, problem); })));
     }
     if (gone.length) {
-      app.appendChild(el('h2', { text: 'Already being bought' }));
-      app.appendChild(el('ul', null, gone.map(function (i) { return itemView(i, takenBy[i.key], mine.indexOf(i.key) >= 0, problem); })));
+      app.appendChild(el('h2', null, ['Already being bought', el('span', { class: 'n', text: String(gone.length) })]));
+      app.appendChild(el('ul', { class: 'crate' }, gone.map(function (i) { return itemView(i, takenBy[i.key], isMine(i.key), problem); })));
     }
     app.appendChild(el('p', { class: 'note', text: 'The list keeps itself up to date: records ' + (who || 'they') + ' buy' + (who ? 's' : '') + ' come off it. Saying you’re getting one doesn’t buy it: use the shop’s link, or any shop you like.' }));
   }
 
-  window.addEventListener('hashchange', function () { token = (location.hash || '').replace(/^#/, ''); MINE_KEY = 'playcord.christmas.mine.' + token; load(); });
+  window.addEventListener('hashchange', function () { readHash(); load(); });
   load();
 })();
 </script>
