@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Christmas list</title>
+<style>
+  :root {
+    --bg: #F4F1EA; --card: #FFFFFF; --ink: #0C0F15; --muted: #545B66; --line: #DDD8CC;
+    --accent: #0D4ABB; --accent-ink: #FFFFFF; --taken: #8A4B12; --soft: #EFE9DC; --warn-bg: #FFF4E0; --warn-ink: #6B3A06;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141519; --card: #1E2026; --ink: #F3F0EA; --muted: #A8ADB7; --line: #2E313A;
+      --accent: #F2B544; --accent-ink: #141519; --taken: #E8B07A; --soft: #262932; --warn-bg: #2B2418; --warn-ink: #F2D29B;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141519; --card: #1E2026; --ink: #F3F0EA; --muted: #A8ADB7; --line: #2E313A;
+    --accent: #F2B544; --accent-ink: #141519; --taken: #E8B07A; --soft: #262932; --warn-bg: #2B2418; --warn-ink: #F2D29B;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  main { max-width: 680px; margin: 0 auto; padding: 28px 16px 48px; }
+  h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 6px; letter-spacing: -0.01em; }
+  .lede { color: var(--muted); margin: 0 0 18px; }
+  .lookaway { background: var(--warn-bg); color: var(--warn-ink); border-radius: 12px; padding: 12px 14px; margin: 0 0 18px; font-size: 0.95rem; }
+  h2 { font-size: 1rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 28px 0 10px; font-weight: 600; }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  li.item { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px; display: grid; grid-template-columns: 76px 1fr; gap: 14px; align-items: start; }
+  li.item.taken { opacity: 0.72; }
+  .cover { width: 76px; height: 76px; border-radius: 8px; background: var(--soft); object-fit: cover; display: block; }
+  .cover.none { display: grid; place-items: center; color: var(--muted); font-size: 0.75rem; text-align: center; padding: 6px; }
+  .title { font-weight: 700; font-size: 1.05rem; line-height: 1.3; margin: 0; overflow-wrap: anywhere; }
+  .artist { margin: 2px 0 0; color: var(--muted); overflow-wrap: anywhere; }
+  .price { margin: 8px 0 0; font-size: 0.95rem; }
+  .shoplink { display: inline-block; margin-top: 4px; color: var(--accent); font-weight: 600; text-decoration: none; }
+  .shoplink:hover, .shoplink:focus-visible { text-decoration: underline; }
+  .actions { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  button { font: inherit; border-radius: 999px; padding: 10px 16px; min-height: 44px; cursor: pointer; border: 1px solid transparent; }
+  button.primary { background: var(--accent); color: var(--accent-ink); font-weight: 700; }
+  button.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+  button:disabled { opacity: 0.6; cursor: default; }
+  button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .status { margin: 10px 0 0; font-weight: 600; color: var(--taken); }
+  form.who { margin-top: 12px; display: grid; gap: 8px; }
+  form.who label { font-size: 0.9rem; color: var(--muted); }
+  input[type="text"] { font: inherit; width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); min-height: 44px; }
+  .problem { color: #C0392B; margin: 8px 0 0; font-size: 0.95rem; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .problem { color: #FF8A7A; } }
+  :root[data-theme="dark"] .problem { color: #FF8A7A; }
+  .note { color: var(--muted); font-size: 0.9rem; margin: 24px 0 0; }
+  .empty { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; }
+  footer { margin-top: 32px; color: var(--muted); font-size: 0.85rem; }
+  @media (max-width: 380px) { li.item { grid-template-columns: 60px 1fr; } .cover { width: 60px; height: 60px; } h1 { font-size: 1.6rem; } }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="heading">A Christmas list</h1>
+  <p class="lede" id="lede">Records from PlayCord, each with where it’s cheapest.</p>
+  <div id="app" aria-live="polite"><p class="lede">Opening the list…</p></div>
+  <footer>Made with PlayCord. Prices change, so check the shop’s page before you buy.</footer>
+</main>
+<script>
+(function () {
+  'use strict';
+  var API = 'https://fyswlovbnndgbipmpquv.supabase.co/functions/v1/api';
+  var token = (location.hash || '').replace(/^#/, '');
+  var app = document.getElementById('app');
+  var state = null;           // the list as last read
+  var asking = null;          // the record whose "who" form is open
+  var busy = false;
+
+  // Records this browser said it's getting, so only it is offered Undo (kept on this device only).
+  var MINE_KEY = 'playcord.christmas.mine.' + token;
+  function mineRead() { try { var v = JSON.parse(localStorage.getItem(MINE_KEY) || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; } }
+  function mineWrite(keys) { try { localStorage.setItem(MINE_KEY, JSON.stringify(keys)); } catch (e) { /* this device only, fine without */ } }
+  var NAME_KEY = 'playcord.christmas.name';
+  function nameRead() { try { return localStorage.getItem(NAME_KEY) || ''; } catch (e) { return ''; } }
+  function nameWrite(n) { try { localStorage.setItem(NAME_KEY, n); } catch (e) { /* fine */ } }
+
+  function el(tag, attrs, kids) {
+    var n = document.createElement(tag);
+    if (attrs) for (var k in attrs) {
+      if (!Object.prototype.hasOwnProperty.call(attrs, k) || attrs[k] === undefined || attrs[k] === null || attrs[k] === false) continue;
+      if (k === 'text') n.textContent = attrs[k];
+      else if (k === 'on') for (var ev in attrs.on) n.addEventListener(ev, attrs.on[ev]);
+      else n.setAttribute(k, attrs[k] === true ? '' : attrs[k]);
+    }
+    (kids || []).forEach(function (c) { if (c) n.appendChild(c); });
+    return n;
+  }
+  function money(n, ccy) {
+    try { return new Intl.NumberFormat('en-GB', { style: 'currency', currency: ccy || 'GBP', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n); }
+    catch (e) { return (ccy === 'GBP' || !ccy ? '£' : ccy + ' ') + Number(n).toFixed(2); }
+  }
+  function dayWords(iso) {
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long' });
+  }
+  function https(u) { return typeof u === 'string' && /^https:\/\/[^\s]+$/.test(u) ? u : null; }
+
+  async function call(route, body) {
+    var res = await fetch(API + '/' + route, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+    var data = await res.json().catch(function () { return {}; });
+    if (!res.ok) { var err = new Error(data && data.error ? data.error : 'PlayCord couldn’t be reached. Try again in a minute.'); err.status = res.status; throw err; }
+    return data;
+  }
+
+  function show(message) {
+    app.textContent = '';
+    app.appendChild(el('div', { class: 'empty' }, [el('p', { text: message, style: 'margin:0' })]));
+  }
+
+  async function load() {
+    if (!/^[A-Za-z0-9_-]{16,64}$/.test(token)) { show('This link isn’t complete. Ask for it again, and open the whole link.'); return; }
+    try { state = await call('wishlist-view', { token: token }); render(); }
+    catch (e) { show(e.message); }
+  }
+
+  async function take(key, by, undo) {
+    if (busy) return;
+    busy = true; render();
+    var problem = null;
+    try {
+      state = await call('wishlist-take', { token: token, key: key, by: by || undefined, undo: !!undo });
+      var mine = mineRead().filter(function (k) { return k !== key; });
+      if (!undo) mine.push(key);
+      mineWrite(mine);
+      asking = null;
+    } catch (e) {
+      problem = { key: key, text: e.message };
+      if (e.status === 409 || e.status === 404) { try { state = await call('wishlist-view', { token: token }); } catch (e2) { /* keep what's shown */ } }
+    }
+    busy = false;
+    render(problem);
+  }
+
+  function itemView(it, takenBy, mine, problem) {
+    var taken = takenBy !== undefined;
+    var cover = https(it.cover)
+      ? el('img', { class: 'cover', src: it.cover, alt: '', loading: 'lazy', width: '76', height: '76' })
+      : el('div', { class: 'cover none', 'aria-hidden': 'true', text: 'No picture' });
+    var priceText = null;
+    if (typeof it.price === 'number' && it.price > 0) {
+      priceText = it.guess
+        ? 'About ' + money(it.price, it.currency) + ' with delivery (PlayCord’s first guess)'
+        : money(it.price, it.currency) + ' with delivery' + (it.shop ? ' at ' + it.shop : '');
+    }
+    var url = https(it.url);
+    var body = [
+      el('p', { class: 'title', text: it.title }),
+      el('p', { class: 'artist', text: it.artist + (it.year ? ', ' + it.year : '') }),
+      priceText ? el('p', { class: 'price', text: priceText }) : null,
+      url ? el('a', { class: 'shoplink', href: url, target: '_blank', rel: 'noopener noreferrer', text: 'See it at ' + (it.shop || 'the shop') + ' ↗' }) : null,
+    ];
+    if (taken) {
+      body.push(el('p', { class: 'status', text: mine ? 'You’re getting this.' : (takenBy ? takenBy + ' is getting this.' : 'Someone’s getting this.') }));
+      if (mine) body.push(el('div', { class: 'actions' }, [el('button', { class: 'ghost', type: 'button', disabled: busy, text: 'Undo: I’m not getting it after all', on: { click: function () { take(it.key, null, true); } } })]));
+    } else if (asking === it.key) {
+      var input = el('input', { type: 'text', id: 'who-' + it.key, maxlength: '40', autocomplete: 'name', placeholder: 'Your name, so the others know', value: nameRead() });
+      var form = el('form', { class: 'who', on: { submit: function (e) { e.preventDefault(); var n = input.value.trim(); if (n) nameWrite(n); take(it.key, n, false); } } }, [
+        el('label', { for: 'who-' + it.key, text: 'Your name (optional: only the others opening this link see it)' }),
+        input,
+        el('div', { class: 'actions' }, [
+          el('button', { class: 'primary', type: 'submit', disabled: busy, text: busy ? 'Saving…' : 'Yes, I’m getting this' }),
+          el('button', { class: 'ghost', type: 'button', disabled: busy, text: 'Cancel', on: { click: function () { asking = null; render(); } } }),
+        ]),
+      ]);
+      body.push(form);
+      setTimeout(function () { try { input.focus(); } catch (e) { /* fine */ } }, 0);
+    } else {
+      body.push(el('div', { class: 'actions' }, [el('button', { class: 'primary', type: 'button', disabled: busy, text: 'I’m getting this', 'aria-label': 'I’m getting ' + it.title, on: { click: function () { asking = it.key; render(); } } })]));
+    }
+    if (problem && problem.key === it.key) body.push(el('p', { class: 'problem', role: 'alert', text: problem.text }));
+    return el('li', { class: 'item' + (taken ? ' taken' : '') }, [cover, el('div', null, body)]);
+  }
+
+  function render(problem) {
+    if (!state) return;
+    var who = state.name ? state.name : '';
+    document.title = who ? who + '’s Christmas list' : 'Christmas list';
+    document.getElementById('heading').textContent = who ? who + '’s Christmas list' : 'A Christmas list';
+    document.getElementById('lede').textContent = 'Records ' + (who || 'they')+ (who ? ' would' : '’d') + ' love, from PlayCord, each with where it’s cheapest' + (state.updatedAt ? ' (updated ' + dayWords(state.updatedAt) + ')' : '') + '.';
+    var takenBy = {};
+    (state.taken || []).forEach(function (t) { takenBy[t.key] = t.by || ''; });
+    var mine = mineRead();
+    var items = state.items || [];
+    var open = items.filter(function (i) { return takenBy[i.key] === undefined; });
+    var gone = items.filter(function (i) { return takenBy[i.key] !== undefined; });
+    app.textContent = '';
+    app.appendChild(el('p', { class: 'lookaway', text: (who ? 'Is this your list, ' + who + '? ' : 'Is this your list? ') + 'Look away now: it shows what people are getting you.' }));
+    if (!items.length) { app.appendChild(el('div', { class: 'empty' }, [el('p', { style: 'margin:0', text: 'Nothing on the list just now. Check back soon.' })])); return; }
+    app.appendChild(el('p', { class: 'lede', text: 'Getting one? Tap “I’m getting this” so nobody else buys it too.' }));
+    if (open.length) {
+      app.appendChild(el('h2', { text: 'Still wanted' }));
+      app.appendChild(el('ul', null, open.map(function (i) { return itemView(i, undefined, false, problem); })));
+    }
+    if (gone.length) {
+      app.appendChild(el('h2', { text: 'Already being bought' }));
+      app.appendChild(el('ul', null, gone.map(function (i) { return itemView(i, takenBy[i.key], mine.indexOf(i.key) >= 0, problem); })));
+    }
+    app.appendChild(el('p', { class: 'note', text: 'The list keeps itself up to date: records ' + (who || 'they') + ' buy' + (who ? 's' : '') + ' come off it. Saying you’re getting one doesn’t buy it: use the shop’s link, or any shop you like.' }));
+  }
+
+  window.addEventListener('hashchange', function () { token = (location.hash || '').replace(/^#/, ''); MINE_KEY = 'playcord.christmas.mine.' + token; load(); });
+  load();
+})();
+</script>
+</body>
+</html>
