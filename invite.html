@@ -46,7 +46,9 @@
   .code small { color: var(--muted); font-weight: 600; }
   .code strong { font: 800 clamp(2.2rem, 11vw, 3.2rem)/1 var(--display); font-stretch: condensed; letter-spacing: 0.12em; }
   button { font: 700 1rem/1 var(--body); min-height: 48px; padding: 0 20px; border-radius: 999px; border: none; background: var(--gold); color: var(--gold-ink); cursor: pointer; justify-self: start; }
-  button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+  button:focus-visible, .open:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+  .open { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 24px; border-radius: 999px; background: var(--gold); color: var(--gold-ink); font: 800 1.05rem/1 var(--body); text-decoration: none; justify-self: start; }
+  button.quiet { background: transparent; color: var(--ink); border: 1px solid var(--line); }
   ol { margin: 0; padding-left: 1.3em; display: grid; gap: 10px; }
   .gone { color: var(--muted); }
   h2 { margin: 0 0 8px; font: 800 1.35rem/1.15 var(--display); font-stretch: condensed; }
@@ -71,7 +73,8 @@
   <section class="code" id="has-code" hidden>
     <small>My invite code</small>
     <strong id="code"></strong>
-    <button type="button" id="copy">Copy the code</button>
+    <a class="open" id="open" href="#">Open in PlayCord</a>
+    <button type="button" id="copy" class="quiet">Copy the code</button>
     <span id="copied" role="status" aria-live="polite"></span>
   </section>
   <p class="gone" id="no-code" hidden>This link has no invite code in it. Ask your friend to send it again.</p>
@@ -79,8 +82,8 @@
     <h2>How to add me</h2>
     <ol>
       <li>Get PlayCord. It’s being tested on iPhone just now: ask me for an invite.</li>
-      <li>Open PlayCord and tap <strong>Friends</strong> in the bar, or the Friends card on Home.</li>
-      <li>Under “Got a friend’s code?”, type or paste the code above, and tap <strong>Add</strong>.</li>
+      <li>Tap <strong>Open in PlayCord</strong> above: Friends opens with my code in it. Tap <strong>Add</strong>.</li>
+      <li>Or open PlayCord yourself, tap <strong>Friends</strong> in the bar, type or paste the code under “Got a friend’s code?”, and tap <strong>Add</strong>.</li>
       <li>We’re friends both ways, and you can see what we share.</li>
     </ol>
   </section>
@@ -96,6 +99,8 @@
     var code = raw.toUpperCase().replace(/[^A-Z0-9]/g, '');
     if (!/^[A-Z2-9]{8}$/.test(code)) { document.getElementById('no-code').hidden = false; return; }
     document.getElementById('has-code').hidden = false;
+    // Opens PlayCord on Friends with the code in the box (its playcord:// links, from runtime 2 builds).
+    document.getElementById('open').setAttribute('href', 'playcord://friend?c=' + code);
     var el = document.getElementById('code');
     el.textContent = code;
     el.setAttribute('aria-label', 'Invite code: ' + code.split('').join(' '));
