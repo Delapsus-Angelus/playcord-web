@@ -315,13 +315,14 @@
       url ? el('a', { class: 'shop', href: url, target: '_blank', rel: 'noopener noreferrer', text: 'See it at ' + (it.shop || 'the shop') + ' ↗' }) : null,
     ];
     if (taken) {
-      body.push(el('p', { class: 'status', text: mine ? 'You’re getting this.' : (takenBy ? takenBy + ' is getting this.' : 'Someone’s getting this.') }));
+      body.push(el('p', { class: 'status', text: mine ? 'You’re getting this.' : 'Someone’s getting this.' }));
       var sent = mine ? read('sent', {})[it.key] : null;
       if (sent && SENT_WORDS[sent]) body.push(el('p', { class: 'sent', text: SENT_WORDS[sent] }));
       if (mine) body.push(el('div', { class: 'act' }, [el('button', { class: 'plain', type: 'button', disabled: busy, text: 'Undo: I’m not getting it after all', on: { click: function () { take(it.key, null, true); } } })]));
     } else if (asking === it.key) {
-      var who = el('input', { type: 'text', id: 'who-' + it.key, maxlength: '40', autocomplete: 'off', placeholder: 'So the others know' });
-      var parts = [el('label', { for: 'who-' + it.key, text: 'Your name (optional: only others opening this link see it)' }), who];
+      // No name asked: who's getting what isn't shown to anyone, so the list's owner can't see it either (Phil, 2 November
+      // 2026: "let's fix", of the owner opening their own link and seeing who was giving what).
+      var parts = [el('p', { class: 'help', text: 'Nobody else sees who’s getting it, not even ' + (state.name || 'the person whose list it is') + '. Others just see that someone is.' })];
       var mail = null, news = null;
       if (state.emails) {
         mail = el('input', { type: 'email', id: 'mail-' + it.key, maxlength: '254', autocomplete: 'email', inputmode: 'email', placeholder: 'For where to buy it' + (state.day ? ', and a reminder' : '') });
@@ -336,7 +337,7 @@
         e.preventDefault();
         var m = mail ? mail.value.trim() : '';
         if (m && !emailOk(m)) { render({ key: it.key, text: 'That email address doesn’t look right. Check it, or leave it empty.' }); return; }
-        take(it.key, who.value.trim(), false, m, !!(news && news.checked && m));
+        take(it.key, '', false, m, !!(news && news.checked && m));
       } } }, parts.concat([
         el('div', { class: 'act' }, [
           el('button', { class: 'get', type: 'submit', disabled: busy, text: busy ? 'Saving…' : 'Yes, I’m getting this' }),
@@ -344,7 +345,7 @@
         ]),
       ]));
       row = form;
-      setTimeout(function () { try { who.focus(); } catch (e) { /* fine */ } }, 0);
+      setTimeout(function () { try { (mail || form.querySelector('button.get')).focus(); } catch (e) { /* fine */ } }, 0);
     } else {
       body.push(el('div', { class: 'act' }, [el('button', { class: 'get', type: 'button', disabled: busy, text: 'I’m getting this', 'aria-label': 'I’m getting ' + it.title, on: { click: function () { asking = it.key; render(); } } })]));
     }
