@@ -7,11 +7,11 @@
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#141519">
 <title>PlayCord</title>
-<meta name="description" content="PlayCord turns the music you play into the vinyl worth owning: which records to buy, in what order, within your budget, and where each is cheapest.">
+<meta name="description" content="Turn what you play into records you’ll keep. PlayCord finds the albums behind the songs you love and plans what to buy, month by month, to fit your budget.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="PlayCord">
-<meta property="og:title" content="PlayCord">
-<meta property="og:description" content="The music you play, turned into the vinyl worth owning: which records to buy, in what order, within your budget.">
+<meta property="og:title" content="PlayCord: turn what you play into records you’ll keep">
+<meta property="og:description" content="The albums behind the songs you love, planned month by month to fit your budget.">
 <meta property="og:url" content="https://playcord.app/">
 <meta property="og:image" content="https://playcord.app/og-gift-list.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -19,70 +19,239 @@
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
-  /* PlayCord's front page (4 November 2026, with playcord.app): what it is, that it's coming, and how to reach us. */
+  /* PlayCord's front page (Phil, 4 November 2026, 15:44: "For the website can we use the splash page from the app.
+     Playlist into records graphics for example."): the app's first page (app/src/screens/WhyPlayCord.tsx) on the web,
+     its three moments on a loop: the songs someone plays most fly into the album they're on, the record slides out and
+     turns, then a few months of a plan. Held still, as words, where motion is turned down. By day and by night. */
   :root {
-    --page: #F5F5F2; --panel: #FFFFFF; --ink: #141519; --muted: #5B606B; --line: #E4E3DF;
-    --gold: #F2B544; --night: #141519; --night-ink: #F3F0EA; --night-muted: #A8ADB7;
+    --bg: #F5F5F2; --surface: #FFFFFF; --fg: #141519; --soft: #3A3E47; --muted: #5B606B; --line: #E4E3DF; --accent: #B7791F;
+    --gold: #F2B544;
     --display: "Avenir Next Condensed", "AvenirNextCondensed-Heavy", "Bahnschrift", "Roboto Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
     --body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
   @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) { --page: #141519; --panel: #1C1E24; --ink: #F3F0EA; --muted: #A8ADB7; --line: #2C2F37; }
+    :root:not([data-theme="light"]) { --bg: #141519; --surface: #1C1E24; --fg: #F3F0EA; --soft: #D4D0C8; --muted: #A8ADB7; --line: #2C2F37; --accent: #F2B544; }
   }
-  :root[data-theme="dark"] { --page: #141519; --panel: #1C1E24; --ink: #F3F0EA; --muted: #A8ADB7; --line: #2C2F37; }
+  :root[data-theme="dark"] { --bg: #141519; --surface: #1C1E24; --fg: #F3F0EA; --soft: #D4D0C8; --muted: #A8ADB7; --line: #2C2F37; --accent: #F2B544; }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
-  body { margin: 0; background: var(--page); color: var(--ink); font: 16px/1.5 var(--body); }
-  .hero { position: relative; overflow: hidden; background: var(--night); color: var(--night-ink); padding: 22px 16px 44px; padding-top: max(22px, env(safe-area-inset-top)); }
-  .hero-in { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
-  .brand { display: inline-flex; align-items: center; gap: 8px; font: 800 1.05rem/1 var(--display); font-stretch: condensed; color: var(--night-ink); text-decoration: none; }
-  .brand svg { width: 26px; height: 26px; flex: none; }
-  h1 { margin: 48px 0 0; max-width: 11ch; font: 800 clamp(2.8rem, 13vw, 5rem)/0.95 var(--display); font-stretch: condensed; }
-  .lede { margin: 16px 0 0; max-width: 30ch; color: var(--night-muted); font-size: 1.1rem; }
-  .soon { display: inline-block; margin-top: 22px; padding: 10px 16px; border-radius: 999px; background: var(--gold); color: #141519; font-weight: 700; }
-  .record { position: absolute; right: -160px; bottom: -200px; width: 360px; height: 360px; border-radius: 50%;
-    background: repeating-radial-gradient(circle, #0B0B0D 0 2px, #1E1F24 2px 4px); display: flex; align-items: center; justify-content: center; opacity: 0.9; }
-  .record::after { content: ""; width: 128px; height: 128px; border-radius: 50%; background: var(--gold); }
-  main { max-width: 672px; margin: 0 auto; padding: 28px 16px 48px; display: grid; gap: 22px; }
-  h2 { margin: 0 0 8px; font: 800 1.4rem/1.15 var(--display); font-stretch: condensed; }
-  ul { margin: 0; padding-left: 1.2em; display: grid; gap: 10px; }
-  .contact { border-top: 1px solid var(--line); padding-top: 18px; color: var(--muted); }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.5 var(--body); }
+  .page { max-width: 1200px; margin: 0 auto; padding: max(20px, env(safe-area-inset-top)) 16px 40px; }
+  .top { display: grid; gap: 22px; }
+  .words { display: grid; gap: 22px; align-content: center; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; font: 800 1.35rem/1 var(--display); font-stretch: condensed; color: var(--fg); text-decoration: none; }
+  .brand svg { width: 40px; height: 40px; flex: none; }
+  h1 { margin: 0; font: 800 clamp(2rem, 8vw, 2.9rem)/1.12 var(--display); font-stretch: condensed; max-width: 16ch; }
+  .reasons { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  .reasons li { display: flex; gap: 10px; color: var(--soft); font-size: 1.02rem; line-height: 1.45; }
+  .reasons li::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); margin-top: 0.5em; }
+  .soon { justify-self: start; padding: 12px 20px; border-radius: 999px; background: var(--gold); color: #141519; font-weight: 800; }
+  /* The stage: drawn by the script below at the width it has. */
+  .stage { position: relative; }
+  .box { position: relative; border-radius: 18px; background: var(--surface); overflow: hidden; }
+  .row, .sleeve, .month { position: absolute; will-change: transform, opacity; }
+  .row { left: 0; display: flex; align-items: center; border-bottom: 1px solid var(--line); }
+  .row b.n { font-family: var(--display); font-weight: 800; line-height: 1; color: var(--accent); text-align: center; }
+  .row .t { flex: 1; min-width: 0; display: grid; gap: 1px; }
+  .row .song { font-weight: 800; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .row .on { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .disc { position: absolute; left: 0; border-radius: 50%; background: #0B0B0D; display: flex; align-items: center; justify-content: center; }
+  .disc .groove { position: absolute; border-radius: 50%; border: 1px solid #26262C; }
+  .disc .label { border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .disc .label::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #0B0B0D; }
+  .face { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; }
+  .face .a { font-family: var(--display); font-weight: 800; font-stretch: condensed; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .face .b { font-weight: 700; opacity: 0.85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .month { display: flex; align-items: center; background: var(--bg); border: 1px solid var(--line); }
+  .month .c { flex: none; display: flex; align-items: flex-end; overflow: hidden; }
+  .month .c span { font: 800 0.62rem/1.05 var(--display); font-stretch: condensed; padding: 3px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .month .t { flex: 1; min-width: 0; display: grid; gap: 1px; }
+  .month .when { color: var(--accent); font-weight: 800; }
+  .month .al { color: var(--fg); font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .month .by { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .said { position: relative; height: 54px; }
+  .said p { position: absolute; inset: 0; margin: 0; display: flex; align-items: center; font-weight: 800; color: var(--fg); font-size: 1.15rem; line-height: 1.3; }
+  .dots { display: flex; gap: 6px; }
+  .dots i { width: 22px; height: 4px; border-radius: 2px; background: var(--accent); }
+  .still { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  .still li { display: flex; gap: 10px; font-weight: 700; font-size: 1.1rem; }
+  .still b { font: 800 1.3rem/1.2 var(--display); color: var(--accent); width: 22px; }
+  .contact { margin-top: 44px; border-top: 1px solid var(--line); padding-top: 20px; color: var(--muted); }
+  .contact h2 { margin: 0 0 8px; color: var(--fg); font: 800 1.35rem/1.15 var(--display); font-stretch: condensed; }
   .contact p { margin: 0 0 6px; }
-  .contact h2 { color: var(--ink); }
   a { color: inherit; }
   a:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
-  footer { max-width: 672px; margin: 0 auto; padding: 0 16px 40px; color: var(--muted); font-size: 0.85rem; }
+  footer { margin-top: 28px; color: var(--muted); font-size: 0.85rem; }
+  @media (min-width: 900px) {
+    .page { padding-top: 48px; }
+    .top { grid-template-columns: 1fr auto; gap: 48px; align-items: center; }
+    h1 { font-size: 2.9rem; }
+    .reasons li { font-size: 1.1rem; }
+  }
 </style>
 </head>
 <body>
-<header class="hero">
-  <div class="hero-in">
-    <a class="brand" href="./">
-      <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="50" fill="#F7F5F0"/><circle cx="50" cy="50" r="43" fill="#0B0B0D"/><circle cx="50" cy="50" r="15" fill="#F2B544"/><circle cx="50" cy="50" r="2.6" fill="#0B0B0D"/></svg>
-      PlayCord
-    </a>
-    <h1>Your music, on vinyl</h1>
-    <p class="lede">PlayCord reads the songs you play and works out which records are worth owning, in what order, within your monthly budget.</p>
-    <span class="soon">Coming soon to the App Store</span>
-  </div>
-  <div class="record" aria-hidden="true"></div>
-</header>
-<main>
-  <section>
-    <h2>What it does</h2>
-    <ul>
-      <li>Finds the albums behind the songs you love, and ranks them for your shelf.</li>
-      <li>Plans what to buy each month, within the budget you set.</li>
-      <li>Checks UK record shops for where each one is cheapest, delivery included.</li>
-      <li>Keeps your collection, your scores and your all-time greats in one place, to share with friends.</li>
-    </ul>
+<div class="page">
+  <section class="top">
+    <div class="words">
+      <a class="brand" href="./" aria-label="PlayCord">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="50" fill="#F7F5F0"/><circle cx="50" cy="50" r="43" fill="#0B0B0D"/><circle cx="50" cy="50" r="15" fill="#F2B544"/><circle cx="50" cy="50" r="2.6" fill="#0B0B0D"/></svg>
+        PlayCord
+      </a>
+      <h1>Turn what you play into records you’ll keep.</h1>
+      <div id="stage-narrow"></div>
+      <ul class="reasons">
+        <li>Know which albums hold the songs you love, not just the hits.</li>
+        <li>Prices from shops that deliver to you, checked for you.</li>
+        <li>Games, rankings and friends to see your music in a new way.</li>
+      </ul>
+      <span class="soon">Coming soon to the App Store</span>
+    </div>
+    <div id="stage-wide"></div>
   </section>
   <section class="contact">
     <h2>Get in touch</h2>
     <p>Questions or ideas: <a href="mailto:hello@playcord.app">hello@playcord.app</a></p>
     <p>Help with the app: <a href="mailto:support@playcord.app">support@playcord.app</a></p>
   </section>
-</main>
-<footer>PlayCord™</footer>
+  <footer>PlayCord™. Album names are shown to explain what the app does; they belong to their artists and labels.</footer>
+</div>
+<script>
+(() => {
+  // As the app's splash has them (WhyPlayCord.tsx SPLASH_ALBUMS): each album with four of its own songs and a colour for
+  // the artist, as the app lights a member's artists. Sleeves in that colour with the album's name, not its cover.
+  const ALBUMS = [
+    { artist: 'Stevie Wonder', album: 'Songs in the Key of Life', year: 1976, colour: '#F2C230', songs: ['Sir Duke', 'I Wish', 'Isn’t She Lovely', 'As'] },
+    { artist: 'The Beatles', album: 'Abbey Road', year: 1969, colour: '#6E8BFF', songs: ['Come Together', 'Something', 'Here Comes the Sun', 'Octopus’s Garden'] },
+    { artist: 'Fleetwood Mac', album: 'Rumours', year: 1977, colour: '#C084FC', songs: ['Dreams', 'Go Your Own Way', 'The Chain', 'Don’t Stop'] },
+    { artist: 'Marvin Gaye', album: 'What’s Going On', year: 1971, colour: '#2DD4BF', songs: ['What’s Going On', 'Mercy Mercy Me (The Ecology)', 'Inner City Blues (Make Me Wanna Holler)', 'What’s Happening Brother'] },
+    { artist: 'Pink Floyd', album: 'The Dark Side of the Moon', year: 1973, colour: '#F472B6', songs: ['Time', 'Money', 'Breathe', 'Us and Them'] },
+    { artist: 'Amy Winehouse', album: 'Back to Black', year: 2006, colour: '#F87171', songs: ['Rehab', 'Back to Black', 'You Know I’m No Good', 'Tears Dry on Their Own'] },
+    { artist: 'Michael Jackson', album: 'Thriller', year: 1982, colour: '#FB923C', songs: ['Billie Jean', 'Beat It', 'Thriller', 'Wanna Be Startin’ Somethin’'] },
+    { artist: 'Nirvana', album: 'Nevermind', year: 1991, colour: '#94A3B8', songs: ['Smells Like Teen Spirit', 'Come as You Are', 'Lithium', 'In Bloom'] },
+  ];
+  const SAID = ['You bring the songs you play most.', 'PlayCord finds the records they’re on.', 'Then plans what to buy, month by month, to fit your budget.'];
+  const SCENE_MS = 3400, TURN_MS = 1800;
+  // The next three months from now, as a plan would show them.
+  const MONTHS = [1, 2, 3].map((n) => { const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() + n); return d.toLocaleString('en-GB', { month: 'long' }); });
+
+  // Colours that read: words on a sleeve, and an artist's name on the page (deeper until it does).
+  const lum = (hex) => { const v = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)); return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]; };
+  const contrast = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+  const inkOn = (bg) => (contrast('#FFFFFF', bg) >= contrast('#0C0F15', bg) ? '#FFFFFF' : '#0C0F15');
+  const readable = (colour, bg) => {
+    let [r, g, b] = [1, 3, 5].map((i) => parseInt(colour.slice(i, i + 2), 16));
+    const hex = () => '#' + [r, g, b].map((v) => Math.round(v).toString(16).padStart(2, '0')).join('');
+    for (let i = 0; i < 12 && contrast(hex(), bg) < 3; i++) { r *= 0.85; g *= 0.85; b *= 0.85; }
+    return hex();
+  };
+  const surface = () => getComputedStyle(document.documentElement).getPropertyValue('--surface').trim() || '#FFFFFF';
+  const seg = (t, ins, outs) => {
+    if (t <= ins[0]) return outs[0];
+    for (let i = 1; i < ins.length; i++) if (t <= ins[i]) { const span = ins[i] - ins[i - 1]; return span ? outs[i - 1] + ((t - ins[i - 1]) / span) * (outs[i] - outs[i - 1]) : outs[i]; }
+    return outs[outs.length - 1];
+  };
+  const el = (tag, cls, style, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (style) Object.assign(e.style, style); if (text !== undefined) e.textContent = text; return e; };
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let at = 0, start = performance.now(), parts = null, size = null, host = null;
+  function sizes() {
+    const wide = window.innerWidth >= 900;
+    const across = Math.min(window.innerWidth - 32, 1160);
+    const W = wide ? Math.min(Math.round(across * 0.56), 600) : Math.min(window.innerWidth - 32, window.innerWidth >= 700 ? 540 : 440);
+    const k = Math.max(1, W / 440);
+    return { wide, W, k, H: Math.round(270 * k) };
+  }
+  function build() {
+    size = sizes();
+    host = document.getElementById(size.wide ? 'stage-wide' : 'stage-narrow');
+    document.getElementById('stage-wide').replaceChildren();
+    document.getElementById('stage-narrow').replaceChildren();
+    if (still) {
+      const ol = el('ol', 'still');
+      SAID.forEach((x, i) => { const li = el('li'); li.append(el('b', '', null, String(i + 1)), el('span', '', null, x)); ol.append(li); });
+      host.append(ol);
+      return;
+    }
+    const { W, H, k } = size;
+    const album = ALBUMS[at], later = [1, 2].map((n) => ALBUMS[(at + n) % ALBUMS.length]);
+    const stage = el('div', 'stage', { width: W + 'px' });
+    stage.setAttribute('role', 'img');
+    stage.setAttribute('aria-label', 'How PlayCord works: ' + SAID.join(' '));
+    const box = el('div', 'box', { width: W + 'px', height: H + 'px' });
+    const rowH = Math.round(54 * k), sleeve = Math.round(138 * k), sx = W - sleeve - Math.round(12 * k), sy = Math.round(52 * k);
+    const named = readable(album.colour, surface()), ink = inkOn(album.colour);
+    // One: four of their most played, as Keystones lists songs. Two: into the album they're on.
+    const rows = album.songs.map((song, i) => {
+      const y = Math.round(6 * k) + i * rowH;
+      const r = el('div', 'row', { top: y + 'px', width: W + 'px', height: rowH + 'px', gap: 12 * k + 'px', padding: `0 ${14 * k}px`, ...(i === 3 ? { borderBottom: '0' } : {}) });
+      const t = el('div', 't');
+      const on = el('span', 'on', { fontSize: 13.5 * k + 'px' });
+      on.append(el('b', '', { color: named }, album.artist), document.createTextNode(`, on ${album.album}`));
+      t.append(el('span', 'song', { fontSize: 16 * k + 'px' }, song), on);
+      r.append(el('b', 'n', { width: 20 * k + 'px', fontSize: 22 * k + 'px' }, String(i + 1)), t);
+      box.append(r);
+      return { r, y, inAt: 0.06 + i * 0.13, go: 1.05 + i * 0.05, dx: sx + sleeve / 2 - W / 2, dy: sy + sleeve / 2 - (y + rowH / 2) };
+    });
+    // The album that holds them: its sleeve in the artist's colour, the disc sliding out and turning.
+    const sl = el('div', 'sleeve', { left: sx + 'px', top: sy + 'px', width: sleeve + 'px', height: sleeve + 'px' });
+    const disc = el('div', 'disc', { top: sleeve * 0.06 + 'px', width: sleeve * 0.88 + 'px', height: sleeve * 0.88 + 'px' });
+    disc.append(el('div', 'groove', { width: sleeve * 0.66 + 'px', height: sleeve * 0.66 + 'px' }), el('div', 'label', { width: sleeve * 0.3 + 'px', height: sleeve * 0.3 + 'px', background: album.colour }));
+    const face = el('div', 'face', { width: sleeve + 'px', height: sleeve + 'px', borderRadius: 6 * k + 'px', background: album.colour, padding: 12 * k + 'px', color: ink });
+    face.append(el('span', 'a', { fontSize: 17 * k + 'px', lineHeight: 20 * k + 'px' }, album.album), el('span', 'b', { fontSize: 12.5 * k + 'px' }, `${album.artist}, ${album.year}`));
+    sl.append(disc, face);
+    box.append(sl);
+    // Three: a few months of the plan, this album first, then the next two.
+    const months = [album, ...later].map((a, i) => {
+      const m = el('div', 'month', { left: 12 * k + 'px', right: 12 * k + 'px', top: Math.round((16 + i * 82) * k) + 'px', height: Math.round(70 * k) + 'px', borderRadius: 14 * k + 'px', padding: `0 ${12 * k}px`, gap: 12 * k + 'px' });
+      const c = el('div', 'c', { width: 46 * k + 'px', height: 46 * k + 'px', borderRadius: 4 * k + 'px', background: a.colour, color: inkOn(a.colour) });
+      c.append(el('span', '', null, a.album));
+      const t = el('div', 't');
+      t.append(el('span', 'when', { fontSize: 12.5 * k + 'px' }, `${MONTHS[i]}, No. ${i + 1} to buy`), el('span', 'al', { fontSize: 15.5 * k + 'px' }, a.album), el('span', 'by', { fontSize: 12.5 * k + 'px' }, `${a.artist}, 4 of your songs`));
+      m.append(c, t);
+      box.append(m);
+      return { m, from: 2.15 + i * 0.16 };
+    });
+    // What each moment is, in words, and where in the three it is.
+    const said = el('div', 'said');
+    const lines = SAID.map((x) => { const p = el('p', '', null, x); said.append(p); return p; });
+    const dots = el('div', 'dots');
+    const marks = SAID.map(() => { const d = el('i'); dots.append(d); return d; });
+    stage.append(box, said, dots);
+    host.append(stage);
+    parts = { rows, sl, disc, sleeve, months, lines, marks };
+  }
+  function frame(now) {
+    if (!parts) return;
+    let t = (now - start) / SCENE_MS;
+    if (t >= 3) { at = (at + 1) % ALBUMS.length; start = now; build(); t = 0; }
+    const { rows, sl, disc, sleeve, months, lines, marks } = parts;
+    for (const x of rows) {
+      const k5 = [0, x.inAt, x.inAt + 0.16, x.go, x.go + 0.28, 3];
+      x.r.style.opacity = seg(t, k5, [0, 0, 1, 1, 0, 0]);
+      const tx = seg(t, k5, [-30, -30, 0, 0, x.dx, x.dx]);
+      const ty = seg(t, [0, x.go, x.go + 0.28, 3], [0, 0, x.dy, x.dy]);
+      const s = seg(t, [0, x.go, x.go + 0.28, 3], [1, 1, 0.3, 0.3]);
+      x.r.style.transform = `translate(${tx}px, ${ty}px) scale(${s})`;
+    }
+    sl.style.opacity = seg(t, [0, 0.92, 1.1, 2.0, 2.2, 3], [0, 0, 1, 1, 0, 0]);
+    sl.style.transform = `scale(${seg(t, [0, 0.92, 1.1, 3], [0.8, 0.8, 1, 1])}) translateY(${seg(t, [0, 2.0, 2.2, 3], [0, 0, -20, -20])}px)`;
+    disc.style.transform = `translateX(${seg(t, [0, 1.4, 1.8, 3], [0, 0, -sleeve * 0.46, -sleeve * 0.46])}px) rotate(${((now % TURN_MS) / TURN_MS) * 360}deg)`;
+    for (const x of months) {
+      const k4 = [0, x.from, x.from + 0.14, 3];
+      x.m.style.opacity = seg(t, [0, x.from, x.from + 0.14, 2.88, 2.98, 3], [0, 0, 1, 1, 0, 0]);
+      x.m.style.transform = `translateY(${seg(t, k4, [14, 14, 0, 0])}px) scale(${seg(t, k4, [0.85, 0.85, 1, 1])})`;
+    }
+    lines.forEach((p, i) => { p.style.opacity = seg(t, [0, i, i + 0.08, i + 0.9, i + 0.98, 3], i === 0 ? [1, 1, 1, 1, 0, 0] : [0, 0, 1, 1, 0, 0]); });
+    marks.forEach((d, i) => { d.style.opacity = seg(t, [0, i, i + 0.05, i + 0.95, i + 1, 3], i === 0 ? [1, 1, 1, 1, 0.25, 0.25] : [0.25, 0.25, 1, 1, 0.25, 0.25]); });
+    requestAnimationFrame(frame);
+  }
+  build();
+  if (!still) requestAnimationFrame(frame);
+  let was = size.wide, wasW = size.W;
+  window.addEventListener('resize', () => { const s = sizes(); if (s.wide !== was || s.W !== wasW) { was = s.wide; wasW = s.W; build(); } });
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', build);
+})();
+</script>
 </body>
 </html>
