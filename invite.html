@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-tfgNbSp4ORPtTrFLDSHuLMvSoVG0qjShECHxnsI8Igs='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#141519">
 <title>Compare with me on PlayCord</title>
 <meta name="description" content="Your GOATs side by side, the songs you share, and This or that. Add me on PlayCord with my invite code.">
@@ -81,7 +82,7 @@
       <li>Get PlayCord. It’s being tested on iPhone just now: ask me for an invite.</li>
       <li>Open PlayCord and tap <strong>Friends</strong> in the bar, or the Friends card on Home.</li>
       <li>Under “Got a friend’s code?”, type or paste the code above, and tap <strong>Add</strong>.</li>
-      <li>We’re friends both ways, and you can see what we share.</li>
+      <li>I’ll get your request. Once I accept it, we’re friends both ways and can see what we share.</li>
     </ol>
   </section>
   <section class="help">
@@ -92,7 +93,9 @@
 </main>
 <script>
   (function () {
-    var raw = new URLSearchParams(location.search).get('c') || '';
+    // The code after # (never sent to the website or kept in its logs); links from before put it after ?c=.
+    var hash = location.hash.replace(/^#/, '');
+    var raw = new URLSearchParams(hash).get('c') || (/^[A-Za-z0-9]{8}$/.test(hash) ? hash : '') || new URLSearchParams(location.search).get('c') || '';
     var code = raw.toUpperCase().replace(/[^A-Z0-9]/g, '');
     if (!/^[A-Z2-9]{8}$/.test(code)) { document.getElementById('no-code').hidden = false; return; }
     document.getElementById('has-code').hidden = false;
