@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-tLB4spyZOQvBIOga+amJfdTHptmCGI39lCIn2vCN3RU='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-uO909cxOA+aiQ28M/c3cScfzTe8OQJ9brWCmI1t7cAI='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#141519">
 <title>PlayCord</title>
 <meta name="description" content="Turn what you play into records you’ll keep. PlayCord finds the albums behind the songs you love and plans what to buy, month by month, to fit your budget.">
@@ -65,12 +65,15 @@
   .disc .groove { position: absolute; border-radius: 50%; border: 1px solid #26262C; }
   .disc .label { border-radius: 50%; display: flex; align-items: center; justify-content: center; }
   .disc .label::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #0B0B0D; }
-  .face { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; }
+  /* A sleeve of PlayCord's own (Phil, 10 November 2026, 19:02: "No album artwork on the website?"; his card: designed
+     sleeves): a drawing in the artist's colour and a title panel, none of it the album's real cover. */
+  .face { position: absolute; left: 0; top: 0; overflow: hidden; box-shadow: 0 1px 0 rgba(0, 0, 0, 0.18); }
+  .face svg, .month .c svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .face .cap { position: absolute; left: 0; right: 0; bottom: 0; display: grid; }
   .face .a { font-family: var(--display); font-weight: 800; font-stretch: condensed; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .face .b { font-weight: 700; opacity: 0.85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .month { display: flex; align-items: center; background: var(--bg); border: 1px solid var(--line); }
-  .month .c { flex: none; display: flex; align-items: flex-end; overflow: hidden; }
-  .month .c span { font: 800 0.62rem/1.05 var(--display); font-stretch: condensed; padding: 3px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .month .c { flex: none; position: relative; overflow: hidden; }
   .month .t { flex: 1; min-width: 0; display: grid; gap: 1px; }
   .month .when { color: var(--accent); font-weight: 800; }
   .month .al { color: var(--fg); font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -127,16 +130,18 @@
 <script>
 (() => {
   // As the app's splash has them (WhyPlayCord.tsx SPLASH_ALBUMS): each album with four of its own songs and a colour for
-  // the artist, as the app lights a member's artists. Sleeves in that colour with the album's name, not its cover.
+  // the artist, as the app lights a member's artists. Sleeves in that colour with the album's name, not its cover: a
+  // sleeve of PlayCord's own, one of five plain drawings (`art`, below) that say nothing of the album or its real cover.
+  // No three in a row share one, as three show together in the plan's months.
   const ALBUMS = [
-    { artist: 'Stevie Wonder', album: 'Songs in the Key of Life', year: 1976, colour: '#F2C230', songs: ['Sir Duke', 'I Wish', 'Isn’t She Lovely', 'As'] },
-    { artist: 'The Beatles', album: 'Abbey Road', year: 1969, colour: '#6E8BFF', songs: ['Come Together', 'Something', 'Here Comes the Sun', 'Octopus’s Garden'] },
-    { artist: 'Fleetwood Mac', album: 'Rumours', year: 1977, colour: '#C084FC', songs: ['Dreams', 'Go Your Own Way', 'The Chain', 'Don’t Stop'] },
-    { artist: 'Marvin Gaye', album: 'What’s Going On', year: 1971, colour: '#2DD4BF', songs: ['What’s Going On', 'Mercy Mercy Me (The Ecology)', 'Inner City Blues (Make Me Wanna Holler)', 'What’s Happening Brother'] },
-    { artist: 'Pink Floyd', album: 'The Dark Side of the Moon', year: 1973, colour: '#F472B6', songs: ['Time', 'Money', 'Breathe', 'Us and Them'] },
-    { artist: 'Amy Winehouse', album: 'Back to Black', year: 2006, colour: '#F87171', songs: ['Rehab', 'Back to Black', 'You Know I’m No Good', 'Tears Dry on Their Own'] },
-    { artist: 'Michael Jackson', album: 'Thriller', year: 1982, colour: '#FB923C', songs: ['Billie Jean', 'Beat It', 'Thriller', 'Wanna Be Startin’ Somethin’'] },
-    { artist: 'Nirvana', album: 'Nevermind', year: 1991, colour: '#94A3B8', songs: ['Smells Like Teen Spirit', 'Come as You Are', 'Lithium', 'In Bloom'] },
+    { artist: 'Stevie Wonder', album: 'Songs in the Key of Life', year: 1976, colour: '#F2C230', art: 'bars', songs: ['Sir Duke', 'I Wish', 'Isn’t She Lovely', 'As'] },
+    { artist: 'The Beatles', album: 'Abbey Road', year: 1969, colour: '#6E8BFF', art: 'arcs', songs: ['Come Together', 'Something', 'Here Comes the Sun', 'Octopus’s Garden'] },
+    { artist: 'Fleetwood Mac', album: 'Rumours', year: 1977, colour: '#C084FC', art: 'dots', songs: ['Dreams', 'Go Your Own Way', 'The Chain', 'Don’t Stop'] },
+    { artist: 'Marvin Gaye', album: 'What’s Going On', year: 1971, colour: '#2DD4BF', art: 'band', songs: ['What’s Going On', 'Mercy Mercy Me (The Ecology)', 'Inner City Blues (Make Me Wanna Holler)', 'What’s Happening Brother'] },
+    { artist: 'Pink Floyd', album: 'The Dark Side of the Moon', year: 1973, colour: '#F472B6', art: 'bars', songs: ['Time', 'Money', 'Breathe', 'Us and Them'] },
+    { artist: 'Amy Winehouse', album: 'Back to Black', year: 2006, colour: '#F87171', art: 'arcs', songs: ['Rehab', 'Back to Black', 'You Know I’m No Good', 'Tears Dry on Their Own'] },
+    { artist: 'Michael Jackson', album: 'Thriller', year: 1982, colour: '#FB923C', art: 'steps', songs: ['Billie Jean', 'Beat It', 'Thriller', 'Wanna Be Startin’ Somethin’'] },
+    { artist: 'Nirvana', album: 'Nevermind', year: 1991, colour: '#94A3B8', art: 'dots', songs: ['Smells Like Teen Spirit', 'Come as You Are', 'Lithium', 'In Bloom'] },
   ];
   const SAID = ['You bring the songs you play most.', 'PlayCord finds the records they’re on.', 'Then plans what to buy, month by month, to fit your budget.'];
   const SCENE_MS = 3400, TURN_MS = 1800;
@@ -160,6 +165,31 @@
     return outs[outs.length - 1];
   };
   const el = (tag, cls, style, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (style) Object.assign(e.style, style); if (text !== undefined) e.textContent = text; return e; };
+  // SLEEVES-BEGIN
+  // A sleeve's drawing: shapes in a deeper and a paler tone of the artist's colour, drawn in a 100 by 60 space. On the
+  // sleeve it fills the top, above the title panel; small, in a month of the plan, it fills the square.
+  const NS = 'http://www.w3.org/2000/svg';
+  const sv = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+  const tone = (hex, to, p) => '#' + [1, 3, 5].map((i) => Math.round(parseInt(hex.slice(i, i + 2), 16) * (1 - p) + to * p).toString(16).padStart(2, '0')).join('');
+  const ART = {
+    // Quarter rings from the top corner.
+    arcs: (deep, pale) => [14, 27, 40, 53, 66].map((r, i) => sv('circle', { cx: 100, cy: 0, r, fill: 'none', stroke: i % 2 ? pale : deep, 'stroke-width': 7 })),
+    // A field of dots, growing across.
+    dots: (deep, pale) => [0, 1, 2, 3].flatMap((row) => [0, 1, 2, 3, 4, 5, 6].map((col) => sv('circle', { cx: 11 + col * 13, cy: 9 + row * 14, r: 1.5 + col * 0.72, fill: (col + row) % 4 === 3 ? pale : deep }))),
+    // Bars of different lengths, from the left.
+    bars: (deep, pale) => [80, 50, 66, 32, 58, 44].map((w, i) => sv('rect', { x: 10, y: 6 + i * 8.6, width: w, height: 5, rx: 2.5, fill: i === 1 ? pale : deep })),
+    // A broad band across, with a thin one beside it.
+    band: (deep, pale) => [sv('polygon', { points: '-5,42 105,6 105,25 -5,61', fill: deep }), sv('polygon', { points: '-5,29 105,-7 105,-2 -5,34', fill: pale })],
+    // Blocks stepping up.
+    steps: (deep, pale) => [15, 25, 35, 45, 54].map((h, i) => sv('rect', { x: 10 + i * 16.6, y: 60 - h, width: 13.6, height: h, fill: i === 4 ? pale : deep })),
+  };
+  function art(a, small) {
+    const deep = tone(a.colour, 0, 0.24), pale = tone(a.colour, 255, 0.46);
+    const g = sv('svg', small ? { viewBox: '20 0 60 60', preserveAspectRatio: 'xMidYMid slice', 'aria-hidden': 'true' } : { viewBox: '0 0 100 100', preserveAspectRatio: 'none', 'aria-hidden': 'true' });
+    g.append(...(ART[a.art] || ART.bars)(deep, pale));
+    return g;
+  }
+  // SLEEVES-END
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   let at = 0, start = performance.now(), parts = null, size = null, host = null;
@@ -216,15 +246,20 @@
     const sl = el('div', 'sleeve', { left: sx + 'px', top: sy + 'px', width: sleeve + 'px', height: sleeve + 'px' });
     const disc = el('div', 'disc', { top: sleeve * 0.06 + 'px', width: sleeve * 0.88 + 'px', height: sleeve * 0.88 + 'px' });
     disc.append(el('div', 'groove', { width: sleeve * 0.66 + 'px', height: sleeve * 0.66 + 'px' }), el('div', 'label', { width: sleeve * 0.3 + 'px', height: sleeve * 0.3 + 'px', background: album.colour }));
-    const face = el('div', 'face', { width: sleeve + 'px', height: sleeve + 'px', borderRadius: 6 * k + 'px', background: album.colour, padding: 12 * k + 'px', color: ink });
-    face.append(el('span', 'a', { fontSize: 17 * k + 'px', lineHeight: 20 * k + 'px' }, album.album), el('span', 'b', { fontSize: 12.5 * k + 'px' }, `${album.artist}, ${album.year}`));
+    const face = el('div', 'face', { width: sleeve + 'px', height: sleeve + 'px', borderRadius: 6 * k + 'px', background: album.colour, color: ink });
+    // The title panel covers the foot of the drawing, however many lines the album's name takes.
+    const cap = el('div', 'cap', { background: album.colour, padding: `${9 * k}px ${12 * k}px ${11 * k}px`, gap: 2 * k + 'px' });
+    // The album's name and whose it is. Not the year: with it the line was cut short on every sleeve.
+    cap.append(el('span', 'a', { fontSize: 17 * k + 'px', lineHeight: 19 * k + 'px' }, album.album), el('span', 'b', { fontSize: 12.5 * k + 'px' }, album.artist));
+    face.append(art(album, false), cap);
     sl.append(disc, face);
     box.append(sl);
     // Three: a few months of the plan, this album first, then the next two.
     const months = [album, ...later].map((a, i) => {
       const m = el('div', 'month', { left: 12 * k + 'px', right: 12 * k + 'px', top: Math.round((16 + i * 82) * k) + 'px', height: Math.round(70 * k) + 'px', borderRadius: 14 * k + 'px', padding: `0 ${12 * k}px`, gap: 12 * k + 'px' });
-      const c = el('div', 'c', { width: 46 * k + 'px', height: 46 * k + 'px', borderRadius: 4 * k + 'px', background: a.colour, color: inkOn(a.colour) });
-      c.append(el('span', '', null, a.album));
+      // Its sleeve, small: the drawing alone, as the album's name is beside it.
+      const c = el('div', 'c', { width: 46 * k + 'px', height: 46 * k + 'px', borderRadius: 4 * k + 'px', background: a.colour });
+      c.append(art(a, true));
       const t = el('div', 't');
       t.append(el('span', 'when', { fontSize: 12.5 * k + 'px' }, `${MONTHS[i]}, No. ${i + 1} to buy`), el('span', 'al', { fontSize: 15.5 * k + 'px' }, a.album), el('span', 'by', { fontSize: 12.5 * k + 'px' }, `${a.artist}, 4 of your songs`));
       m.append(c, t);
