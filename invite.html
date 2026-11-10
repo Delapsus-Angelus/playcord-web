@@ -47,6 +47,8 @@
     background: repeating-radial-gradient(circle, #0B0B0D 0 2px, #1E1F24 2px 4px); display: flex; align-items: center; justify-content: center; opacity: 0.9; }
   .record::after { content: ""; width: 120px; height: 120px; border-radius: 50%; background: var(--gold); }
   main { max-width: 640px; margin: 0 auto; padding: 24px 16px 48px; display: grid; gap: 18px; }
+  footer { max-width: 640px; margin: 0 auto; padding: 0 16px 40px; font-size: 0.85rem; color: var(--muted); }
+  footer a { color: var(--muted); }
   .code { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 18px; display: grid; gap: 10px; }
   .code small { color: var(--muted); font-weight: 600; }
   .code strong { font: 800 clamp(2.2rem, 11vw, 3.2rem)/1 var(--display); font-stretch: condensed; letter-spacing: 0.12em; }
@@ -83,7 +85,7 @@
   <section>
     <h2>How to add me</h2>
     <ol>
-      <li>Get PlayCord. It’s coming soon for iPhone and Android, and is being tested on iPhone just now: ask me for an invite.</li>
+      <li>Get <a href="./">PlayCord</a>. It’s coming soon for iPhone and Android, and is being tested on iPhone just now: ask me for an invite.</li>
       <li>Open PlayCord and tap <strong>Friends</strong> in the bar, or the Friends card on Home.</li>
       <li>Under “Got a friend’s code?”, type or paste the code above, and tap <strong>Add</strong>.</li>
       <li>I’ll get your request. Once I accept it, we’re friends both ways and can see what we share.</li>
@@ -114,5 +116,6 @@
     });
   })();
 </script>
+<footer><a href="support.html">Support</a> · <a href="terms.html">Terms of use</a> · <a href="privacy.html">Privacy policy</a></footer>
 </body>
 </html>
