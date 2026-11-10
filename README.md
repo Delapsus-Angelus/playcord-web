@@ -10,7 +10,8 @@ from PlayCord's server by the secret after the `#` in its link, which never reac
 - `news.html`: "Yes, send me them" from the last of those emails. Nothing happens until its button is pressed.
 - `playcord-logo.png`, `apple-touch-icon.png`, `favicon.svg`, `favicon-32.png`: PlayCord's record, for emails, home
   screens and browser tabs.
-- `index.html`: PlayCord's home page at playcord.app. `invite.html`: the page a friend invite opens.
+- `index.html`: PlayCord's home page at playcord.app (preview card `og-playcord.png`). `invite.html`: the page a friend
+  invite opens (preview card `og-invite.png`).
 - `about.html`, `terms.html`, `privacy.html`, `support.html`, `complaints.html`: the legal and help pages. These are
   written by the PlayCord repository's `scripts/web-pages.ts` (`npx tsx scripts/web-pages.ts ../playcord-web`), so
   change them there, not here.
