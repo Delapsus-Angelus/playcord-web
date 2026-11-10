@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-rK3miGEA8QtkNtUB1xO34HUdzuKVOLf6SyLj279Mm4g='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-tLB4spyZOQvBIOga+amJfdTHptmCGI39lCIn2vCN3RU='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#141519">
 <title>PlayCord</title>
 <meta name="description" content="Turn what you play into records you’ll keep. PlayCord finds the albums behind the songs you love and plans what to buy, month by month, to fit your budget.">
@@ -14,7 +14,10 @@
 <meta property="og:title" content="PlayCord: turn what you play into records you’ll keep">
 <meta property="og:description" content="The albums behind the songs you love, planned month by month to fit your budget.">
 <meta property="og:url" content="https://playcord.app/">
-<meta property="og:image" content="https://playcord.app/og-gift-list.png">
+<meta property="og:image" content="https://playcord.app/og-playcord.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="PlayCord’s record, with the words: Turn what you play into records you’ll keep">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
@@ -49,6 +52,8 @@
   .soon { justify-self: start; padding: 12px 20px; border-radius: 999px; background: var(--gold); color: #141519; font-weight: 800; }
   /* The stage: drawn by the script below at the width it has. */
   .stage { position: relative; }
+  .pause { margin-top: 10px; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line); background: none; color: var(--soft); font: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+  .pause:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
   .box { position: relative; border-radius: 18px; background: var(--surface); overflow: hidden; }
   .row, .sleeve, .month { position: absolute; will-change: transform, opacity; }
   .row { left: 0; display: flex; align-items: center; border-bottom: 1px solid var(--line); }
@@ -93,6 +98,7 @@
 </head>
 <body>
 <div class="page">
+<main>
   <section class="top">
     <div class="words">
       <a class="brand" href="./" aria-label="PlayCord">
@@ -106,7 +112,7 @@
         <li>Prices from shops that deliver to you, checked for you.</li>
         <li>Games, rankings and friends to see your music in a new way.</li>
       </ul>
-      <span class="soon">Coming soon to the App Store</span>
+      <span class="soon">Coming soon for iPhone and Android</span>
     </div>
     <div id="stage-wide"></div>
   </section>
@@ -115,6 +121,7 @@
     <p>Questions or ideas: <a href="mailto:hello@playcord.app">hello@playcord.app</a></p>
     <p>Help with the app: <a href="mailto:support@playcord.app">support@playcord.app</a></p>
   </section>
+</main>
   <footer><a href="support.html">Support</a> · <a href="terms.html">Terms of use</a> · <a href="privacy.html">Privacy policy</a> · <a href="about.html">About and legal</a> · <a href="complaints.html">Reports and complaints</a><br>PlayCord™. Album names are shown to explain what the app does; they belong to their artists and labels.</footer>
 </div>
 <script>
@@ -156,6 +163,16 @@
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   let at = 0, start = performance.now(), parts = null, size = null, host = null;
+  // A way to stop the moving picture and start it again (anything that moves for more than five seconds needs one).
+  let paused = false, pausedAt = 0;
+  const pause = el('button', 'pause', null, 'Pause');
+  pause.type = 'button';
+  pause.addEventListener('click', () => {
+    paused = !paused;
+    pause.textContent = paused ? 'Play' : 'Pause';
+    if (paused) pausedAt = performance.now();
+    else { start += performance.now() - pausedAt; requestAnimationFrame(frame); }
+  });
   function sizes() {
     const wide = window.innerWidth >= 900;
     const across = Math.min(window.innerWidth - 32, 1160);
@@ -165,6 +182,7 @@
   }
   function build() {
     size = sizes();
+    const held = document.activeElement === pause;
     host = document.getElementById(size.wide ? 'stage-wide' : 'stage-narrow');
     document.getElementById('stage-wide').replaceChildren();
     document.getElementById('stage-narrow').replaceChildren();
@@ -219,11 +237,14 @@
     const dots = el('div', 'dots');
     const marks = SAID.map(() => { const d = el('i'); dots.append(d); return d; });
     stage.append(box, said, dots);
-    host.append(stage);
+    host.append(stage, pause);
+    if (held) pause.focus();
     parts = { rows, sl, disc, sleeve, months, lines, marks };
+    if (paused) frame(pausedAt);
   }
   function frame(now) {
     if (!parts) return;
+    if (paused) now = pausedAt;
     let t = (now - start) / SCENE_MS;
     if (t >= 3) { at = (at + 1) % ALBUMS.length; start = now; build(); t = 0; }
     const { rows, sl, disc, sleeve, months, lines, marks } = parts;
@@ -245,7 +266,7 @@
     }
     lines.forEach((p, i) => { p.style.opacity = seg(t, [0, i, i + 0.08, i + 0.9, i + 0.98, 3], i === 0 ? [1, 1, 1, 1, 0, 0] : [0, 0, 1, 1, 0, 0]); });
     marks.forEach((d, i) => { d.style.opacity = seg(t, [0, i, i + 0.05, i + 0.95, i + 1, 3], i === 0 ? [1, 1, 1, 1, 0.25, 0.25] : [0.25, 0.25, 1, 1, 0.25, 0.25]); });
-    requestAnimationFrame(frame);
+    if (!paused) requestAnimationFrame(frame);
   }
   build();
   if (!still) requestAnimationFrame(frame);
