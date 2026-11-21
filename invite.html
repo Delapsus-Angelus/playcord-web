@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-tfgNbSp4ORPtTrFLDSHuLMvSoVG0qjShECHxnsI8Igs='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-5zItj1Krt+Ai06QPgb/UGEXxOIa+IRxaYeLLuD2ptzQ='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#141519">
 <title>Compare with me on PlayCord</title>
 <meta name="description" content="Our GOATs side by side, the songs we share, and This or that. Add me with my invite code.">
@@ -99,6 +99,9 @@
 </main>
 <script>
   (function () {
+    // Never inside another site's page, where a visitor could be tricked into tapping (Grok's review, W-L2): GitHub Pages
+    // can't send a header to stop it, so the page stops itself.
+    if (window.top !== window.self) { document.documentElement.textContent = 'Open this page on its own, at playcord.app.'; return; }
     // The code after # (never sent to the website or kept in its logs); links from before put it after ?c=.
     var hash = location.hash.replace(/^#/, '');
     var raw = new URLSearchParams(hash).get('c') || (/^[A-Za-z0-9]{8}$/.test(hash) ? hash : '') || new URLSearchParams(location.search).get('c') || '';

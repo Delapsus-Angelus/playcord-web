@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-ehqWoiCfoP3EvYB56gve4nO85LjZEPJ10UgDi6i27jA='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src https://fyswlovbnndgbipmpquv.supabase.co; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-IQve/wVE+ChZYWvbxOisUl5N852i/HE6NrF2mUU7gMc='; style-src 'unsafe-inline'; img-src 'self' data:; connect-src https://fyswlovbnndgbipmpquv.supabase.co; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#141519">
 <title>News from PlayCord</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -50,6 +50,9 @@
 <script>
 (function () {
   'use strict';
+  // Never inside another site's page, where a visitor could be tricked into tapping (Grok's review, W-L2): GitHub Pages
+  // can't send a header to stop it, so the page stops itself.
+  if (window.top !== window.self) { document.documentElement.textContent = 'Open this page on its own, at playcord.app.'; return; }
   var API = 'https://fyswlovbnndgbipmpquv.supabase.co/functions/v1/api';
   var key = (location.hash || '').replace(/^#/, '');
   var main = document.getElementById('main');
