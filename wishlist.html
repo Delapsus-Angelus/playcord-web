@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-u0bTpxH6eN2gkKDlIESu2PnICebn8+wpH0nVa+8m/ec='; style-src 'unsafe-inline'; img-src 'self' data: https://coverartarchive.org https://archive.org https://*.archive.org; connect-src https://fyswlovbnndgbipmpquv.supabase.co; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-2MS77zgm0ADEoDKL1MGnRkpSm0xG4kLPwZNe2DuFUIA='; style-src 'unsafe-inline'; img-src 'self' data: https://coverartarchive.org https://archive.org https://*.archive.org; connect-src https://fyswlovbnndgbipmpquv.supabase.co; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#141519">
 <title>A gift list on PlayCord</title>
 <meta name="description" content="Records they’d love, with where each is cheapest. Tap “I’m getting this” so nobody buys the same one twice.">
@@ -170,6 +170,9 @@
 <script>
 (function () {
   'use strict';
+  // Never inside another site's page, where a visitor could be tricked into tapping (Grok's review, W-L2): GitHub Pages
+  // can't send a header to stop it, so the page stops itself.
+  if (window.top !== window.self) { document.documentElement.textContent = 'Open this page on its own, at playcord.app.'; return; }
   var API = 'https://fyswlovbnndgbipmpquv.supabase.co/functions/v1/api';
   // The link: the list's secret after the #, and, from a giver's own email, "&undo=" and their claim's secret.
   var token = '', undoClaim = '';
@@ -184,6 +187,7 @@
   var state = null;           // the list as last read
   var asking = null;          // the record whose "who" form is open
   var busy = false;
+  var drafts = {};            // what a giver typed for each record, put back when the form is drawn again (an error, a check)
 
   // The occasions a list can be for, as PlayCord's app names them (engine/src/wishlist.ts OCCASIONS).
   var OCCASIONS = {
@@ -290,6 +294,7 @@
       }
       write('claims', c); write('sent', sent);
       asking = null;
+      delete drafts[key];
     } catch (e) {
       problem = { key: key, text: e.message };
       if (e.status === 409 || e.status === 404) { try { state = await call('wishlist-view', { token: token }); } catch (e2) { /* keep what's shown */ } }
@@ -329,8 +334,11 @@
       var parts = [el('p', { class: 'help', text: 'Nobody else sees who’s getting it, not even ' + (state.name || 'the person whose list it is') + '. Others just see that someone is.' })];
       var mail = null, news = null;
       if (state.emails) {
-        mail = el('input', { type: 'email', id: 'mail-' + it.key, maxlength: '254', autocomplete: 'email', inputmode: 'email', placeholder: 'For where to buy it' + (state.day ? ', and a reminder' : '') });
-        news = el('input', { type: 'checkbox', id: 'news-' + it.key });
+        var draft = drafts[it.key] || {};
+        mail = el('input', { type: 'email', id: 'mail-' + it.key, maxlength: '254', autocomplete: 'email', inputmode: 'email', placeholder: 'For where to buy it' + (state.day ? ', and a reminder' : ''), value: draft.email || undefined });
+        news = el('input', { type: 'checkbox', id: 'news-' + it.key, checked: !!draft.news });
+        mail.addEventListener('input', function () { (drafts[it.key] = drafts[it.key] || {}).email = mail.value; });
+        news.addEventListener('change', function () { (drafts[it.key] = drafts[it.key] || {}).news = news.checked; });
         parts.push(el('label', { for: 'mail-' + it.key, text: 'Your email (optional)' }), mail,
           el('p', { class: 'help', text: state.day
             ? 'PlayCord emails you where to buy it and a reminder a week before. It’s deleted the day after, and used for nothing else unless you tick below and confirm it.'
@@ -345,7 +353,7 @@
       } } }, parts.concat([
         el('div', { class: 'act' }, [
           el('button', { class: 'get', type: 'submit', disabled: busy, text: busy ? 'Saving…' : 'Yes, I’m getting this' }),
-          el('button', { class: 'plain', type: 'button', disabled: busy, text: 'Cancel', on: { click: function () { asking = null; render(); } } }),
+          el('button', { class: 'plain', type: 'button', disabled: busy, text: 'Cancel', on: { click: function () { asking = null; delete drafts[it.key]; render(); } } }),
         ]),
       ]));
       row = form;
