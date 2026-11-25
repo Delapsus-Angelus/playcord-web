@@ -2,7 +2,7 @@
 # beyond what the page needs. Run again after any script changes (it replaces the old one).
 import base64, hashlib, re, sys, pathlib
 SUPA = 'https://fyswlovbnndgbipmpquv.supabase.co'
-COVERS = 'https://coverartarchive.org https://archive.org https://*.archive.org'
+COVERS = 'https://coverartarchive.org https://archive.org https://*.archive.org ' + SUPA + '/storage/v1/object/public/covers/'
 EXTRA = {'wishlist.html': {'connect-src': SUPA, 'img-src': COVERS}, 'news.html': {'connect-src': SUPA}, 'stop.html': {'connect-src': SUPA}}
 root = pathlib.Path(sys.argv[1])
 for f in sorted(root.glob('*.html')):
