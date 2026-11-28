@@ -49,7 +49,10 @@
   .reasons { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
   .reasons li { display: flex; gap: 10px; color: var(--soft); font-size: 1.02rem; line-height: 1.45; }
   .reasons li::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); margin-top: 0.5em; }
-  .soon { justify-self: start; padding: 12px 20px; border-radius: 999px; background: var(--gold); color: #141519; font-weight: 800; }
+  .get { justify-self: start; display: grid; gap: 10px; }
+  .store { justify-self: start; display: inline-block; line-height: 0; }
+  .store img { display: block; height: 54px; width: auto; }
+  .price { margin: 0; color: var(--muted, #B9B5AC); font-size: 0.95rem; }
   /* The stage: drawn by the script below at the width it has. */
   .stage { position: relative; }
   .pause { margin-top: 10px; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line); background: none; color: var(--soft); font: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
@@ -115,7 +118,10 @@
         <li>Prices from shops that deliver to you, checked for you.</li>
         <li>Games, rankings and friends to see your music in a new way.</li>
       </ul>
-      <span class="soon">Coming soon for iPhone and iPad</span>
+      <div class="get">
+        <a class="store" href="https://apps.apple.com/gb/app/playcord-playlists-to-vinyl/id6834595034" aria-label="Download PlayCord on the App Store"><img src="app-store-badge.svg" alt="Download on the App Store" width="162" height="54"></a>
+        <p class="price">On the UK App Store for iPhone and iPad. Free to download; membership £3.99 a month or £24.99 a year.</p>
+      </div>
     </div>
     <div id="stage-wide"></div>
   </section>
